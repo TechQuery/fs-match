@@ -1,0 +1,29 @@
+{
+  "name": "search-file",
+  "version": "0.2.0",
+  "description": "A NodeJS package for searching files or folders by Regular expression based on built-in command of your OS",
+  "main": "index.js",
+  "bin": "command.js",
+  "engines": {
+    "node": "^5.12.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TechQuery/search-file.git"
+  },
+  "keywords": [
+    "search",
+    "filesystem",
+    "regex-match",
+    "command-line"
+  ],
+  "author": "shiy007@qq.com",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/TechQuery/search-file/issues"
+  },
+  "homepage": "https://github.com/TechQuery/search-file#readme"
+}
