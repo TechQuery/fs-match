@@ -1,7 +1,7 @@
 {
-  "name": "search-file",
+  "name": "fs-match",
   "version": "0.2.0",
-  "description": "A NodeJS package for searching files or folders by Regular expression based on built-in command of your OS",
+  "description": "A NodeJS package for finding files or folders by Regular expression based on built-in command of your OS",
   "main": "index.js",
   "bin": "command.js",
   "engines": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TechQuery/search-file.git"
+    "url": "git+https://github.com/TechQuery/fs-match.git"
   },
   "keywords": [
     "search",
@@ -23,7 +23,7 @@
   "author": "shiy007@qq.com",
   "license": "LGPL-3.0",
   "bugs": {
-    "url": "https://github.com/TechQuery/search-file/issues"
+    "url": "https://github.com/TechQuery/fs-match/issues"
   },
-  "homepage": "https://github.com/TechQuery/search-file#readme"
+  "homepage": "https://github.com/TechQuery/fs-match#readme"
 }

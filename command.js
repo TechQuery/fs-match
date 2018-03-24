@@ -1,10 +1,10 @@
 #! /usr/bin/env node
 
-const search = require('./index'),
+const FS_match = require('./index'),
       pattern = process.argv[2],
       root = process.argv[3] || '/';
 
-var list = search(pattern, root);
+var list = FS_match(pattern, root);
 
 if ( list[0] )
     console.log( list.join("\n") );

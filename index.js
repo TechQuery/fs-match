@@ -4,15 +4,15 @@ const FS = require('fs'), child_process = require('child_process');
 
 
 
-const search = (process.platform === 'win32')  ?
-    function search(path, name) {
+const match = (process.platform === 'win32')  ?
+    function match(path, name) {
 
         if (path === '/')
             return  'CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(function (disk) {
 
                 disk = `${disk}:\\`;
 
-                return  FS.existsSync( disk )  &&  search(disk, name);
+                return  FS.existsSync( disk )  &&  match(disk, name);
 
             }).filter( Boolean ).join("\n");
 
@@ -43,5 +43,5 @@ const search = (process.platform === 'win32')  ?
 
 module.exports = function (name_pattern,  root_path = '/') {
 
-    return  search(root_path, name_pattern).split("\n");
+    return  match(root_path, name_pattern).split("\n");
 };

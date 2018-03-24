@@ -1,10 +1,10 @@
 # Find file
 
-A NodeJS package for searching files or folders by Regular expression based on built-in command of your OS.
+A NodeJS package for finding files or folders by Regular expression based on built-in command of your OS.
 
-[![NPM Dependency](https://david-dm.org/TechQuery/search-file.svg)](https://david-dm.org/TechQuery/search-file)
+[![NPM Dependency](https://david-dm.org/TechQuery/fs-match.svg)](https://david-dm.org/TechQuery/fs-match)
 
-[![NPM](https://nodei.co/npm/search-file.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/search-file/)
+[![NPM](https://nodei.co/npm/fs-match.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/fs-match/)
 
 
 
@@ -21,11 +21,11 @@ A NodeJS package for searching files or folders by Regular expression based on b
 ```Shell
 # Search the whole File system
 
-search-file "full\\.name\\.pattern"
+fs-match "full\\.name\\.pattern"
 
 # Search in a folder
 
-search-file "full\\.name\\.pattern" "root/path"
+fs-match "full\\.name\\.pattern" "root/path"
 ```
 
 
