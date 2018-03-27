@@ -1,6 +1,6 @@
 {
   "name": "fs-match",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A NodeJS package for finding files or folders by Regular expression based on built-in command of your OS",
   "main": "index.js",
   "bin": "command.js",
@@ -25,5 +25,5 @@
   "bugs": {
     "url": "https://github.com/TechQuery/fs-match/issues"
   },
-  "homepage": "https://github.com/TechQuery/fs-match#readme"
+  "homepage": "https://techquery.github.io/fs-match/"
 }

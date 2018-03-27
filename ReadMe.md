@@ -1,4 +1,4 @@
-# Find file
+# FS match
 
 A NodeJS package for finding files or folders by Regular expression based on built-in command of your OS.
 

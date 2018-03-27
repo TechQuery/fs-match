@@ -28,13 +28,16 @@ const match = (process.platform === 'win32')  ?
     } :
     function (path, name) {
 
+        if (name.indexOf('.*') < 0)  name = `.*${name}.*`;
+
         var result = child_process.spawnSync(
-                'find',  [path, '-iregex', `.*/${name}`]
+                'find',  [path, '-type', 'dfl', '-iregex', `.*/${name}`]
             );
 
         console.warn(
             result.stderr.toString('utf-8')
-                .replace(/.+Permission denied/mg, '').trim()
+                .replace(/.+(Permission denied|not permitted)/mg, '')
+                .replace(/\n{2,}/, '').trim()
         );
 
         return result.stdout.toString('utf-8').trim();
