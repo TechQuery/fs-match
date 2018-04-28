@@ -27,8 +27,3 @@ fs-match "full\\.name\\.pattern"
 
 fs-match "full\\.name\\.pattern" "root/path"
 ```
-
-
-## Dependency
-
- - Windows: [PowerShell](https://microsoft.com/powershell)
