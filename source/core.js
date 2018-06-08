@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 
-import {existsSync, readdirSync, readdir, stat} from 'fs-extra';
+import {existsSync, readdirSync, readdir, stat, execSync} from 'fs-extra';
 
 import {join} from 'path';
 
@@ -66,4 +66,38 @@ export  async function filter(iterator, pattern, count, callback) {
                 callback  &&  callback(item, index);
             else
                 break;
+}
+
+
+export  async function which(name) {
+
+    var path;
+
+    const setPath = file => path = file;
+
+    switch ( process.platform ) {
+        case 'win32':  {
+
+            for (let root of [
+                process.env.PROGRAMFILES, process.env['ProgramFiles(x86)']
+            ]) {
+                if (! root)  continue;
+
+                await filter(
+                    traverse( root ),  `\\\\${name}\\.exe$`,  1,  setPath
+                );
+
+                if ( path )  return path;
+            }
+
+            break;
+        }
+        case 'darwin':
+            await filter(traverse('/Application'), `\\\\${name}$`, 1, setPath);
+            break;
+        default:
+            path = execSync(`which ${name}`) + '';
+    }
+
+    return path;
 }

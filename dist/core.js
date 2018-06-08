@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.filter = exports.traverse = undefined;
+exports.which = exports.filter = exports.traverse = undefined;
 
 var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
@@ -319,6 +319,87 @@ var filter = exports.filter = function () {
 
     return function filter(_x2, _x3, _x4, _x5) {
         return _ref2.apply(this, arguments);
+    };
+}();
+
+var which = exports.which = function () {
+    var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(name) {
+        var path, setPath, _arr, _i, root;
+
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
+            while (1) {
+                switch (_context3.prev = _context3.next) {
+                    case 0:
+                        setPath = function setPath(file) {
+                            return path = file;
+                        };
+
+                        _context3.t0 = process.platform;
+                        _context3.next = _context3.t0 === 'win32' ? 4 : _context3.t0 === 'darwin' ? 18 : 21;
+                        break;
+
+                    case 4:
+                        _arr = [process.env.PROGRAMFILES, process.env['ProgramFiles(x86)']];
+                        _i = 0;
+
+                    case 6:
+                        if (!(_i < _arr.length)) {
+                            _context3.next = 17;
+                            break;
+                        }
+
+                        root = _arr[_i];
+
+                        if (root) {
+                            _context3.next = 10;
+                            break;
+                        }
+
+                        return _context3.abrupt('continue', 14);
+
+                    case 10:
+                        _context3.next = 12;
+                        return filter(traverse(root), '\\\\' + name + '\\.exe$', 1, setPath);
+
+                    case 12:
+                        if (!path) {
+                            _context3.next = 14;
+                            break;
+                        }
+
+                        return _context3.abrupt('return', path);
+
+                    case 14:
+                        _i++;
+                        _context3.next = 6;
+                        break;
+
+                    case 17:
+                        return _context3.abrupt('break', 22);
+
+                    case 18:
+                        _context3.next = 20;
+                        return filter(traverse('/Application'), '\\\\' + name + '$', 1, setPath);
+
+                    case 20:
+                        return _context3.abrupt('break', 22);
+
+                    case 21:
+                        path = (0, _fsExtra.execSync)('which ' + name) + '';
+
+                    case 22:
+                        return _context3.abrupt('return', path);
+
+                    case 23:
+                    case 'end':
+                        return _context3.stop();
+                }
+            }
+        }, _callee3, this);
+    }));
+
+    return function which(_x6) {
+        return _ref3.apply(this, arguments);
     };
 }();
 

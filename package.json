@@ -1,19 +1,25 @@
 {
   "name": "fs-match",
-  "version": "1.0.0",
-  "description": "A NodeJS package for finding files or folders by Regular expression based on Asynchronous iteration of ES 9",
+  "version": "1.1.0",
+  "description": "A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9",
   "main": "dist/core.js",
-  "bin": "dist/command.js",
+  "bin": {
+    "fs-match": "dist/find.js",
+    "app-find": "dist/which.js"
+  },
   "engines": {
     "node": "^5.12.0"
   },
   "scripts": {
     "lint": "eslint source/",
     "precommit": "npm run lint",
-    "boot": "echo #! /usr/bin/env node> dist/command.js",
-    "compile-entry": "babel source/command.js >> dist/command.js",
+    "boot-find": "echo #! /usr/bin/env node> dist/find.js",
+    "compile-find": "babel source/find.js >> dist/find.js",
+    "boot-which": "echo #! /usr/bin/env node> dist/which.js",
+    "compile-which": "babel source/which.js >> dist/which.js",
+    "build-command": "npm run boot-find  &&  npm run compile-find  &&  npm run boot-which  &&  npm run compile-which",
     "compile-core": "babel source/core.js > dist/core.js",
-    "build": "npm run boot  &&  npm run compile-entry  &&  npm run compile-core",
+    "build": "npm run build-command  &&  npm run compile-core",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

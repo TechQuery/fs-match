@@ -1,6 +1,6 @@
 # FS match
 
-A NodeJS package for finding files or folders by Regular expression based on [Asynchronous iteration of ES 9](https://babeljs.io/docs/plugins/transform-async-generator-functions/)
+A NodeJS package for finding folders, files & apps by Regular expression based on [Asynchronous iteration of ES 9](https://babeljs.io/docs/plugins/transform-async-generator-functions/).
 
 [![NPM Dependency](https://david-dm.org/TechQuery/fs-match.svg)](https://david-dm.org/TechQuery/fs-match)
 
@@ -8,15 +8,16 @@ A NodeJS package for finding files or folders by Regular expression based on [As
 
 
 
-## Usage
-
-
-### Import to other module
+## Use in another module
 
 [Example](source/command.js)
 
 
-### Use in command-line shell
+
+## Use in Command-line shell
+
+
+### Search files
 
 ```Shell
 # Search in current directory
@@ -31,3 +32,20 @@ fs-match root/path -r full\.name\.pattern
 
 fs-match root/path -r full\.name\.pattern -c 1
 ```
+
+### Search apps
+
+```Shell
+# Show in stdout
+
+app-find chrome,firefox
+
+# Append to a file
+
+app-find chrome,firefox .npmrc
+```
+
+
+## Typical case
+
+ 1. [Puppeteer browser](https://easywebapp.github.io/puppeteer-browser)
