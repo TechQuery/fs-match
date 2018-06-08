@@ -1,6 +1,6 @@
 # FS match
 
-A NodeJS package for finding files or folders by Regular expression based on built-in command of your OS.
+A NodeJS package for finding files or folders by Regular expression based on [Asynchronous iteration of ES 9](https://babeljs.io/docs/plugins/transform-async-generator-functions/)
 
 [![NPM Dependency](https://david-dm.org/TechQuery/fs-match.svg)](https://david-dm.org/TechQuery/fs-match)
 
@@ -13,17 +13,21 @@ A NodeJS package for finding files or folders by Regular expression based on bui
 
 ### Import to other module
 
-[Example](command.js)
+[Example](source/command.js)
 
 
 ### Use in command-line shell
 
 ```Shell
-# Search the whole File system
+# Search in current directory
 
-fs-match "full\\.name\\.pattern"
+fs-match -r full\.name\.pattern
 
-# Search in a folder
+# Search in a specific folder
 
-fs-match "full\\.name\\.pattern" "root/path"
+fs-match root/path -r full\.name\.pattern
+
+# Search first match in a specific folder
+
+fs-match root/path -r full\.name\.pattern -c 1
 ```

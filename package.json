@@ -1,13 +1,20 @@
 {
   "name": "fs-match",
-  "version": "0.3.0",
-  "description": "A NodeJS package for finding files or folders by Regular expression based on built-in command of your OS",
-  "main": "index.js",
-  "bin": "command.js",
+  "version": "1.0.0",
+  "description": "A NodeJS package for finding files or folders by Regular expression based on Asynchronous iteration of ES 9",
+  "main": "dist/core.js",
+  "bin": "dist/command.js",
   "engines": {
     "node": "^5.12.0"
   },
   "scripts": {
+    "lint": "eslint source/",
+    "precommit": "npm run lint",
+    "boot": "echo #! /usr/bin/env node> dist/command.js",
+    "compile-entry": "babel source/command.js >> dist/command.js",
+    "compile-core": "babel source/core.js > dist/core.js",
+    "build": "npm run boot  &&  npm run compile-entry  &&  npm run compile-core",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,12 +25,38 @@
     "search",
     "filesystem",
     "regex-match",
-    "command-line"
+    "command-line",
+    "async",
+    "iterator"
   ],
   "author": "shiy007@qq.com",
   "license": "LGPL-3.0",
   "bugs": {
     "url": "https://github.com/TechQuery/fs-match/issues"
   },
-  "homepage": "https://techquery.github.io/fs-match/"
+  "homepage": "https://techquery.github.io/fs-match/",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
+    "babel-plugin-transform-async-generator-functions": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^4.19.1",
+    "husky": "^0.14.3"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-runtime": "^6.26.0",
+    "commander": "^2.15.1",
+    "fs-extra": "^6.0.1"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ],
+    "plugins": [
+      "transform-async-generator-functions",
+      "transform-runtime"
+    ]
+  }
 }
