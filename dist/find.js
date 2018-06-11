@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+
 'use strict';
 
 var _commander = require('commander');
@@ -14,4 +15,3 @@ _commander2.default.arguments('[dir]').option('-r, --reg-exp <pattern>', 'RegExp
 (0, _core.filter)((0, _core.traverse)(_commander2.default.args[0] || '.'), _commander2.default.regExp, _commander2.default.count, function (file) {
     return console.info(file);
 });
-

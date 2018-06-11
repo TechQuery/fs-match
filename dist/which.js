@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+
 'use strict';
 
 var _regenerator = require('babel-runtime/regenerator');
@@ -115,4 +116,3 @@ var write_file = process.argv[3];
         }
     }, _callee, undefined, [[4, 18, 22, 30], [23,, 25, 29]]);
 }))();
-

@@ -10,7 +10,12 @@ A NodeJS package for finding folders, files & apps by Regular expression based o
 
 ## Use in another module
 
-[Example](source/command.js)
+ - Example
+   1. [find](source/find.js)
+   2. [which](source/which.js)
+ - Document
+   - Online: [URL](https://techquery.github.io/fs-match/) or `npm docs`
+   - Offline: `npm start`
 
 
 

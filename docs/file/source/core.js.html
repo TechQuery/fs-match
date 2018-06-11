@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">source/core.js | fs-match</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A NodeJS package for finding folders, files &amp; apps by Regular expression based on Asynchronous iteration of ES 9"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="fs-match"><meta property="twitter:description" content="A NodeJS package for finding folders, files &amp; apps by Regular expression based on Asynchronous iteration of ES 9"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/TechQuery/fs-match"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-filter">filter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-traverse">traverse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-which">which</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getAppFolder">getAppFolder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPartition">getPartition</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">source/core.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;babel-polyfill&apos;;
+
+import {readdir, stat, execSync} from &apos;fs-extra&apos;;
+
+import {join} from &apos;path&apos;;
+
+import {getPartition, getAppFolder} from &apos;./windows&apos;;
+
+
+/**
+ * Traverse File-system
+ *
+ * @param {string} path - Root path to traverse
+ */
+export  async function* traverse(path) {
+
+    if ((path === &apos;/&apos;)  &amp;&amp;  (process.platform === &apos;win32&apos;)) {
+
+        for (let disk of getPartition())  yield* traverse( disk );
+
+        return;
+    }
+
+    for (let name  of  await readdir( path )) {
+
+        name = join(path, name);
+
+        yield name;
+
+        try {
+            if ((await stat( name )).isDirectory())
+                yield* traverse( name );
+
+        } catch (error) {
+
+            switch ( error.code ) {
+                case &apos;EPERM&apos;:
+                case &apos;EBUSY&apos;:
+                case &apos;UNKNOWN&apos;:    continue;
+            }
+
+            throw error;
+        }
+    }
+}
+
+/**
+ * Iterator filter
+ *
+ * @param {Iterable}         iterator
+ * @param {?(RegExp|string)} pattern          String pattern to match
+ * @param {number}           [count=Infinity] Result count
+ * @param {function}         [callback]       Call with every result
+ */
+export  async function filter(iterator, pattern, count, callback) {
+
+    var index = 0;  count = ~~count || Infinity;
+
+    if (pattern  &amp;&amp;  (! (pattern instanceof RegExp)))
+        pattern = RegExp(pattern + &apos;&apos;,  &apos;i&apos;);
+
+    callback = (callback instanceof Function)  &amp;&amp;  callback;
+
+    for await (let item of iterator)
+        if ((! pattern)  ||  pattern.test( item ))
+            if (index++ &lt; count)
+                callback  &amp;&amp;  callback(item, index);
+            else
+                break;
+}
+
+
+/**
+ * @param {string} name - Name (without extension name) of a executable file
+ *
+ * @return {string} First matched path of a command
+ */
+export  async function which(name) {
+
+    var path;
+
+    const setPath = file =&gt; path = file;
+
+    switch ( process.platform ) {
+        case &apos;win32&apos;:  {
+
+            for (let root of getAppFolder()) {
+
+                await filter(
+                    traverse( root ),  `\\\\${name}\\.exe$`,  1,  setPath
+                );
+
+                if ( path )  return path;
+            }
+
+            break;
+        }
+        case &apos;darwin&apos;:  {
+
+            for (let root of [
+                &apos;/Volumes&apos;, &apos;/Applications&apos;, `${process.env.HOME}/Applications`
+            ]) {
+                await filter(traverse( root ),  `${name}.app$`,  1,  setPath);
+
+                if ( path )  return path;
+            }
+
+            break;
+        }
+        default:
+            path = execSync(`which ${name}`) + &apos;&apos;;
+    }
+
+    return path;
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

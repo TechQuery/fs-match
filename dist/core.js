@@ -29,9 +29,14 @@ var _asyncGeneratorDelegate2 = require('babel-runtime/helpers/asyncGeneratorDele
 
 var _asyncGeneratorDelegate3 = _interopRequireDefault(_asyncGeneratorDelegate2);
 
+/**
+ * Traverse File-system
+ *
+ * @param {string} path - Root path to traverse
+ */
 var traverse = exports.traverse = function () {
     var _ref = _asyncGenerator3.default.wrap( /*#__PURE__*/_regenerator2.default.mark(function _callee(path) {
-        var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _disk, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, name;
+        var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, disk, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, name;
 
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
@@ -46,7 +51,7 @@ var traverse = exports.traverse = function () {
                         _didIteratorError = false;
                         _iteratorError = undefined;
                         _context.prev = 4;
-                        _iterator = (0, _getIterator3.default)(WinDisk());
+                        _iterator = (0, _getIterator3.default)((0, _windows.getPartition)());
 
                     case 6:
                         if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
@@ -54,8 +59,8 @@ var traverse = exports.traverse = function () {
                             break;
                         }
 
-                        _disk = _step.value;
-                        return _context.delegateYield((0, _asyncGeneratorDelegate3.default)((0, _asyncIterator3.default)(traverse(_disk)), _asyncGenerator3.default.await), 't0', 9);
+                        disk = _step.value;
+                        return _context.delegateYield((0, _asyncGeneratorDelegate3.default)((0, _asyncIterator3.default)(traverse(disk)), _asyncGenerator3.default.await), 't0', 9);
 
                     case 9:
                         _iteratorNormalCompletion = true;
@@ -208,6 +213,16 @@ var traverse = exports.traverse = function () {
     };
 }();
 
+/**
+ * Iterator filter
+ *
+ * @param {Iterable}         iterator
+ * @param {?(RegExp|string)} pattern          String pattern to match
+ * @param {number}           [count=Infinity] Result count
+ * @param {function}         [callback]       Call with every result
+ */
+
+
 var filter = exports.filter = function () {
     var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(iterator, pattern, count, callback) {
         var index, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _value, item;
@@ -322,9 +337,16 @@ var filter = exports.filter = function () {
     };
 }();
 
+/**
+ * @param {string} name - Name (without extension name) of a executable file
+ *
+ * @return {string} First matched path of a command
+ */
+
+
 var which = exports.which = function () {
     var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(name) {
-        var path, setPath, _arr, _i, root;
+        var path, setPath, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, root, _arr, _i, _root;
 
         return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
@@ -335,67 +357,118 @@ var which = exports.which = function () {
                         };
 
                         _context3.t0 = process.platform;
-                        _context3.next = _context3.t0 === 'win32' ? 4 : _context3.t0 === 'darwin' ? 18 : 21;
+                        _context3.next = _context3.t0 === 'win32' ? 4 : _context3.t0 === 'darwin' ? 33 : 45;
                         break;
 
                     case 4:
-                        _arr = [process.env.PROGRAMFILES, process.env['ProgramFiles(x86)']];
-                        _i = 0;
+                        _iteratorNormalCompletion4 = true;
+                        _didIteratorError4 = false;
+                        _iteratorError4 = undefined;
+                        _context3.prev = 7;
+                        _iterator4 = (0, _getIterator3.default)((0, _windows.getAppFolder)());
 
-                    case 6:
-                        if (!(_i < _arr.length)) {
-                            _context3.next = 17;
+                    case 9:
+                        if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
+                            _context3.next = 18;
                             break;
                         }
 
-                        root = _arr[_i];
-
-                        if (root) {
-                            _context3.next = 10;
-                            break;
-                        }
-
-                        return _context3.abrupt('continue', 14);
-
-                    case 10:
-                        _context3.next = 12;
+                        root = _step4.value;
+                        _context3.next = 13;
                         return filter(traverse(root), '\\\\' + name + '\\.exe$', 1, setPath);
 
-                    case 12:
+                    case 13:
                         if (!path) {
-                            _context3.next = 14;
+                            _context3.next = 15;
                             break;
                         }
 
                         return _context3.abrupt('return', path);
 
-                    case 14:
-                        _i++;
-                        _context3.next = 6;
+                    case 15:
+                        _iteratorNormalCompletion4 = true;
+                        _context3.next = 9;
                         break;
 
-                    case 17:
-                        return _context3.abrupt('break', 22);
-
                     case 18:
-                        _context3.next = 20;
-                        return filter(traverse('/Application'), '\\\\' + name + '$', 1, setPath);
+                        _context3.next = 24;
+                        break;
 
                     case 20:
-                        return _context3.abrupt('break', 22);
+                        _context3.prev = 20;
+                        _context3.t1 = _context3['catch'](7);
+                        _didIteratorError4 = true;
+                        _iteratorError4 = _context3.t1;
 
-                    case 21:
-                        path = (0, _fsExtra.execSync)('which ' + name) + '';
+                    case 24:
+                        _context3.prev = 24;
+                        _context3.prev = 25;
 
-                    case 22:
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
+                        }
+
+                    case 27:
+                        _context3.prev = 27;
+
+                        if (!_didIteratorError4) {
+                            _context3.next = 30;
+                            break;
+                        }
+
+                        throw _iteratorError4;
+
+                    case 30:
+                        return _context3.finish(27);
+
+                    case 31:
+                        return _context3.finish(24);
+
+                    case 32:
+                        return _context3.abrupt('break', 46);
+
+                    case 33:
+                        _arr = ['/Volumes', '/Applications', process.env.HOME + '/Applications'];
+                        _i = 0;
+
+                    case 35:
+                        if (!(_i < _arr.length)) {
+                            _context3.next = 44;
+                            break;
+                        }
+
+                        _root = _arr[_i];
+                        _context3.next = 39;
+                        return filter(traverse(_root), name + '.app$', 1, setPath);
+
+                    case 39:
+                        if (!path) {
+                            _context3.next = 41;
+                            break;
+                        }
+
                         return _context3.abrupt('return', path);
 
-                    case 23:
+                    case 41:
+                        _i++;
+                        _context3.next = 35;
+                        break;
+
+                    case 44:
+                        return _context3.abrupt('break', 46);
+
+                    case 45:
+                        path = (0, _fsExtra.execSync)('which ' + name) + '';
+
+                    case 46:
+                        return _context3.abrupt('return', path);
+
+                    case 47:
                     case 'end':
                         return _context3.stop();
                 }
             }
-        }, _callee3, this);
+        }, _callee3, this, [[7, 20, 24, 32], [25,, 27, 31]]);
     }));
 
     return function which(_x6) {
@@ -403,25 +476,12 @@ var which = exports.which = function () {
     };
 }();
 
-exports.WinDisk = WinDisk;
-
 require('babel-polyfill');
 
 var _fsExtra = require('fs-extra');
 
 var _path = require('path');
 
+var _windows = require('./windows');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var disk;
-
-function WinDisk() {
-
-    return disk || (disk = 'CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(function (disk) {
-
-        disk = disk + ':\\';
-
-        if ((0, _fsExtra.existsSync)(disk) && (0, _fsExtra.readdirSync)(disk)[2]) return disk;
-    }).filter(Boolean));
-}
-

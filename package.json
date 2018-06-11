@@ -1,6 +1,6 @@
 {
   "name": "fs-match",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9",
   "main": "dist/core.js",
   "bin": {
@@ -13,14 +13,9 @@
   "scripts": {
     "lint": "eslint source/",
     "precommit": "npm run lint",
-    "boot-find": "echo #! /usr/bin/env node> dist/find.js",
-    "compile-find": "babel source/find.js >> dist/find.js",
-    "boot-which": "echo #! /usr/bin/env node> dist/which.js",
-    "compile-which": "babel source/which.js >> dist/which.js",
-    "build-command": "npm run boot-find  &&  npm run compile-find  &&  npm run boot-which  &&  npm run compile-which",
-    "compile-core": "babel source/core.js > dist/core.js",
-    "build": "npm run build-command  &&  npm run compile-core",
+    "build": "node dist/compile source/ dist/  &&  esdoc",
     "prepublishOnly": "npm run build",
+    "start": "web-server docs/ -o",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -42,27 +37,22 @@
   },
   "homepage": "https://techquery.github.io/fs-match/",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-plugin-transform-async-generator-functions": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
+    "esdoc": "^1.1.0",
+    "esdoc-ecmascript-proposal-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^4.19.1",
-    "husky": "^0.14.3"
+    "husky": "^0.14.3",
+    "koapache": "^0.2.3"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "commander": "^2.15.1",
     "fs-extra": "^6.0.1"
-  },
-  "babel": {
-    "presets": [
-      "env"
-    ],
-    "plugins": [
-      "transform-async-generator-functions",
-      "transform-runtime"
-    ]
   }
 }

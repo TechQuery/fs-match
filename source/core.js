@@ -1,29 +1,22 @@
 import 'babel-polyfill';
 
-import {existsSync, readdirSync, readdir, stat, execSync} from 'fs-extra';
+import {readdir, stat, execSync} from 'fs-extra';
 
 import {join} from 'path';
 
-
-var disk;
-
-export  function WinDisk() {
-
-    return  disk  ||  (disk = 'CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(disk => {
-
-        disk = `${disk}:\\`;
-
-        if (existsSync( disk )  &&  readdirSync( disk )[2])  return disk;
-
-    }).filter( Boolean ));
-}
+import {getPartition, getAppFolder} from './windows';
 
 
+/**
+ * Traverse File-system
+ *
+ * @param {string} path - Root path to traverse
+ */
 export  async function* traverse(path) {
 
     if ((path === '/')  &&  (process.platform === 'win32')) {
 
-        for (let disk of WinDisk())  yield* traverse( disk );
+        for (let disk of getPartition())  yield* traverse( disk );
 
         return;
     }
@@ -51,6 +44,14 @@ export  async function* traverse(path) {
     }
 }
 
+/**
+ * Iterator filter
+ *
+ * @param {Iterable}         iterator
+ * @param {?(RegExp|string)} pattern          String pattern to match
+ * @param {number}           [count=Infinity] Result count
+ * @param {function}         [callback]       Call with every result
+ */
 export  async function filter(iterator, pattern, count, callback) {
 
     var index = 0;  count = ~~count || Infinity;
@@ -69,6 +70,11 @@ export  async function filter(iterator, pattern, count, callback) {
 }
 
 
+/**
+ * @param {string} name - Name (without extension name) of a executable file
+ *
+ * @return {string} First matched path of a command
+ */
 export  async function which(name) {
 
     var path;
@@ -78,10 +84,7 @@ export  async function which(name) {
     switch ( process.platform ) {
         case 'win32':  {
 
-            for (let root of [
-                process.env.PROGRAMFILES, process.env['ProgramFiles(x86)']
-            ]) {
-                if (! root)  continue;
+            for (let root of getAppFolder()) {
 
                 await filter(
                     traverse( root ),  `\\\\${name}\\.exe$`,  1,  setPath
@@ -92,9 +95,18 @@ export  async function which(name) {
 
             break;
         }
-        case 'darwin':
-            await filter(traverse('/Application'), `\\\\${name}$`, 1, setPath);
+        case 'darwin':  {
+
+            for (let root of [
+                '/Volumes', '/Applications', `${process.env.HOME}/Applications`
+            ]) {
+                await filter(traverse( root ),  `${name}.app$`,  1,  setPath);
+
+                if ( path )  return path;
+            }
+
             break;
+        }
         default:
             path = execSync(`which ${name}`) + '';
     }
