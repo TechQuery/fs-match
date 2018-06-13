@@ -10,9 +10,12 @@ Commander
     .parse( process.argv );
 
 
-filter(
-    traverse(Commander.args[0] || '.'),
-    Commander.regExp,
-    Commander.count,
-    file  =>  console.info( file )
-);
+(async () => {
+
+    for await (let file of filter(
+        traverse(Commander.args[0] || '.'),
+        Commander.regExp,
+        Commander.count
+    ))
+        console.info( file );
+})();

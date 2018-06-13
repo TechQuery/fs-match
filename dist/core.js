@@ -152,7 +152,7 @@ var traverse = exports.traverse = function () {
                         _context.prev = 48;
                         _context.t5 = _context['catch'](41);
                         _context.t6 = _context.t5.code;
-                        _context.next = _context.t6 === 'EPERM' ? 53 : _context.t6 === 'EBUSY' ? 53 : _context.t6 === 'UNKNOWN' ? 53 : 54;
+                        _context.next = _context.t6 === 'EPERM' ? 53 : _context.t6 === 'EBUSY' ? 53 : _context.t6 === 'ELOOP' ? 53 : _context.t6 === 'UNKNOWN' ? 53 : 54;
                         break;
 
                     case 53:
@@ -219,12 +219,11 @@ var traverse = exports.traverse = function () {
  * @param {Iterable}         iterator
  * @param {?(RegExp|string)} pattern          String pattern to match
  * @param {number}           [count=Infinity] Result count
- * @param {function}         [callback]       Call with every result
  */
 
 
 var filter = exports.filter = function () {
-    var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(iterator, pattern, count, callback) {
+    var _ref2 = _asyncGenerator3.default.wrap( /*#__PURE__*/_regenerator2.default.mark(function _callee2(iterator, pattern, count) {
         var index, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _value, item;
 
         return _regenerator2.default.wrap(function _callee2$(_context2) {
@@ -236,25 +235,23 @@ var filter = exports.filter = function () {
 
                         if (pattern && !(pattern instanceof RegExp)) pattern = RegExp(pattern + '', 'i');
 
-                        callback = callback instanceof Function && callback;
-
                         _iteratorNormalCompletion3 = true;
                         _didIteratorError3 = false;
                         _iteratorError3 = undefined;
-                        _context2.prev = 7;
+                        _context2.prev = 6;
                         _iterator3 = (0, _asyncIterator3.default)(iterator);
 
-                    case 9:
-                        _context2.next = 11;
-                        return _iterator3.next();
+                    case 8:
+                        _context2.next = 10;
+                        return _asyncGenerator3.default.await(_iterator3.next());
 
-                    case 11:
+                    case 10:
                         _step3 = _context2.sent;
                         _iteratorNormalCompletion3 = _step3.done;
-                        _context2.next = 15;
-                        return _step3.value;
+                        _context2.next = 14;
+                        return _asyncGenerator3.default.await(_step3.value);
 
-                    case 15:
+                    case 14:
                         _value = _context2.sent;
 
                         if (_iteratorNormalCompletion3) {
@@ -274,7 +271,10 @@ var filter = exports.filter = function () {
                             break;
                         }
 
-                        callback && callback(item, index);
+                        _context2.next = 21;
+                        return item;
+
+                    case 21:
                         _context2.next = 24;
                         break;
 
@@ -283,7 +283,7 @@ var filter = exports.filter = function () {
 
                     case 24:
                         _iteratorNormalCompletion3 = true;
-                        _context2.next = 9;
+                        _context2.next = 8;
                         break;
 
                     case 27:
@@ -292,7 +292,7 @@ var filter = exports.filter = function () {
 
                     case 29:
                         _context2.prev = 29;
-                        _context2.t0 = _context2['catch'](7);
+                        _context2.t0 = _context2['catch'](6);
                         _didIteratorError3 = true;
                         _iteratorError3 = _context2.t0;
 
@@ -306,7 +306,7 @@ var filter = exports.filter = function () {
                         }
 
                         _context2.next = 38;
-                        return _iterator3.return();
+                        return _asyncGenerator3.default.await(_iterator3.return());
 
                     case 38:
                         _context2.prev = 38;
@@ -329,10 +329,10 @@ var filter = exports.filter = function () {
                         return _context2.stop();
                 }
             }
-        }, _callee2, this, [[7, 29, 33, 43], [34,, 38, 42]]);
+        }, _callee2, this, [[6, 29, 33, 43], [34,, 38, 42]]);
     }));
 
-    return function filter(_x2, _x3, _x4, _x5) {
+    return function filter(_x2, _x3, _x4) {
         return _ref2.apply(this, arguments);
     };
 }();
@@ -346,132 +346,243 @@ var filter = exports.filter = function () {
 
 var which = exports.which = function () {
     var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(name) {
-        var path, setPath, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, root, _arr, _i, _root;
+        var _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, root, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, _value2, file, _arr, _i, _root, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, _value3, _file;
 
         return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
                 switch (_context3.prev = _context3.next) {
                     case 0:
-                        setPath = function setPath(file) {
-                            return path = file;
-                        };
-
                         _context3.t0 = process.platform;
-                        _context3.next = _context3.t0 === 'win32' ? 4 : _context3.t0 === 'darwin' ? 33 : 45;
+                        _context3.next = _context3.t0 === 'win32' ? 3 : _context3.t0 === 'darwin' ? 62 : 104;
                         break;
 
-                    case 4:
+                    case 3:
+                        _iteratorNormalCompletion6 = true;
+                        _didIteratorError6 = false;
+                        _iteratorError6 = undefined;
+                        _context3.prev = 6;
+                        _iterator6 = (0, _getIterator3.default)((0, _windows.getAppFolder)());
+
+                    case 8:
+                        if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
+                            _context3.next = 47;
+                            break;
+                        }
+
+                        root = _step6.value;
                         _iteratorNormalCompletion4 = true;
                         _didIteratorError4 = false;
                         _iteratorError4 = undefined;
-                        _context3.prev = 7;
-                        _iterator4 = (0, _getIterator3.default)((0, _windows.getAppFolder)());
-
-                    case 9:
-                        if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
-                            _context3.next = 18;
-                            break;
-                        }
-
-                        root = _step4.value;
-                        _context3.next = 13;
-                        return filter(traverse(root), '\\\\' + name + '\\.exe$', 1, setPath);
-
-                    case 13:
-                        if (!path) {
-                            _context3.next = 15;
-                            break;
-                        }
-
-                        return _context3.abrupt('return', path);
+                        _context3.prev = 13;
+                        _iterator4 = (0, _asyncIterator3.default)(filter(traverse(root), '\\\\' + name + '\\.exe$', 1));
 
                     case 15:
+                        _context3.next = 17;
+                        return _iterator4.next();
+
+                    case 17:
+                        _step4 = _context3.sent;
+                        _iteratorNormalCompletion4 = _step4.done;
+                        _context3.next = 21;
+                        return _step4.value;
+
+                    case 21:
+                        _value2 = _context3.sent;
+
+                        if (_iteratorNormalCompletion4) {
+                            _context3.next = 28;
+                            break;
+                        }
+
+                        file = _value2;
+                        return _context3.abrupt('return', file);
+
+                    case 25:
                         _iteratorNormalCompletion4 = true;
-                        _context3.next = 9;
+                        _context3.next = 15;
                         break;
 
-                    case 18:
-                        _context3.next = 24;
+                    case 28:
+                        _context3.next = 34;
                         break;
 
-                    case 20:
-                        _context3.prev = 20;
-                        _context3.t1 = _context3['catch'](7);
+                    case 30:
+                        _context3.prev = 30;
+                        _context3.t1 = _context3['catch'](13);
                         _didIteratorError4 = true;
                         _iteratorError4 = _context3.t1;
 
-                    case 24:
-                        _context3.prev = 24;
-                        _context3.prev = 25;
+                    case 34:
+                        _context3.prev = 34;
+                        _context3.prev = 35;
 
-                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                            _iterator4.return();
+                        if (!(!_iteratorNormalCompletion4 && _iterator4.return)) {
+                            _context3.next = 39;
+                            break;
                         }
 
-                    case 27:
-                        _context3.prev = 27;
+                        _context3.next = 39;
+                        return _iterator4.return();
+
+                    case 39:
+                        _context3.prev = 39;
 
                         if (!_didIteratorError4) {
-                            _context3.next = 30;
+                            _context3.next = 42;
                             break;
                         }
 
                         throw _iteratorError4;
 
-                    case 30:
-                        return _context3.finish(27);
+                    case 42:
+                        return _context3.finish(39);
 
-                    case 31:
-                        return _context3.finish(24);
+                    case 43:
+                        return _context3.finish(34);
 
-                    case 32:
-                        return _context3.abrupt('break', 46);
+                    case 44:
+                        _iteratorNormalCompletion6 = true;
+                        _context3.next = 8;
+                        break;
 
-                    case 33:
-                        _arr = ['/Volumes', '/Applications', process.env.HOME + '/Applications'];
+                    case 47:
+                        _context3.next = 53;
+                        break;
+
+                    case 49:
+                        _context3.prev = 49;
+                        _context3.t2 = _context3['catch'](6);
+                        _didIteratorError6 = true;
+                        _iteratorError6 = _context3.t2;
+
+                    case 53:
+                        _context3.prev = 53;
+                        _context3.prev = 54;
+
+                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                            _iterator6.return();
+                        }
+
+                    case 56:
+                        _context3.prev = 56;
+
+                        if (!_didIteratorError6) {
+                            _context3.next = 59;
+                            break;
+                        }
+
+                        throw _iteratorError6;
+
+                    case 59:
+                        return _context3.finish(56);
+
+                    case 60:
+                        return _context3.finish(53);
+
+                    case 61:
+                        return _context3.abrupt('break', 105);
+
+                    case 62:
+                        _arr = ['/Applications', process.env.HOME + '/Applications'];
                         _i = 0;
 
-                    case 35:
+                    case 64:
                         if (!(_i < _arr.length)) {
-                            _context3.next = 44;
+                            _context3.next = 103;
                             break;
                         }
 
                         _root = _arr[_i];
-                        _context3.next = 39;
-                        return filter(traverse(_root), name + '.app$', 1, setPath);
+                        _iteratorNormalCompletion5 = true;
+                        _didIteratorError5 = false;
+                        _iteratorError5 = undefined;
+                        _context3.prev = 69;
+                        _iterator5 = (0, _asyncIterator3.default)(filter(traverse(_root), name + '.app$', 1));
 
-                    case 39:
-                        if (!path) {
-                            _context3.next = 41;
+                    case 71:
+                        _context3.next = 73;
+                        return _iterator5.next();
+
+                    case 73:
+                        _step5 = _context3.sent;
+                        _iteratorNormalCompletion5 = _step5.done;
+                        _context3.next = 77;
+                        return _step5.value;
+
+                    case 77:
+                        _value3 = _context3.sent;
+
+                        if (_iteratorNormalCompletion5) {
+                            _context3.next = 84;
                             break;
                         }
 
-                        return _context3.abrupt('return', path);
+                        _file = _value3;
+                        return _context3.abrupt('return', _file);
 
-                    case 41:
-                        _i++;
-                        _context3.next = 35;
+                    case 81:
+                        _iteratorNormalCompletion5 = true;
+                        _context3.next = 71;
                         break;
 
-                    case 44:
-                        return _context3.abrupt('break', 46);
+                    case 84:
+                        _context3.next = 90;
+                        break;
 
-                    case 45:
-                        path = (0, _fsExtra.execSync)('which ' + name) + '';
+                    case 86:
+                        _context3.prev = 86;
+                        _context3.t3 = _context3['catch'](69);
+                        _didIteratorError5 = true;
+                        _iteratorError5 = _context3.t3;
 
-                    case 46:
-                        return _context3.abrupt('return', path);
+                    case 90:
+                        _context3.prev = 90;
+                        _context3.prev = 91;
 
-                    case 47:
+                        if (!(!_iteratorNormalCompletion5 && _iterator5.return)) {
+                            _context3.next = 95;
+                            break;
+                        }
+
+                        _context3.next = 95;
+                        return _iterator5.return();
+
+                    case 95:
+                        _context3.prev = 95;
+
+                        if (!_didIteratorError5) {
+                            _context3.next = 98;
+                            break;
+                        }
+
+                        throw _iteratorError5;
+
+                    case 98:
+                        return _context3.finish(95);
+
+                    case 99:
+                        return _context3.finish(90);
+
+                    case 100:
+                        _i++;
+                        _context3.next = 64;
+                        break;
+
+                    case 103:
+                        return _context3.abrupt('break', 105);
+
+                    case 104:
+                        return _context3.abrupt('return', (0, _fsExtra.execSync)('which ' + name) + '');
+
+                    case 105:
                     case 'end':
                         return _context3.stop();
                 }
             }
-        }, _callee3, this, [[7, 20, 24, 32], [25,, 27, 31]]);
+        }, _callee3, this, [[6, 49, 53, 61], [13, 30, 34, 44], [35,, 39, 43], [54,, 56, 60], [69, 86, 90, 100], [91,, 95, 99]]);
     }));
 
-    return function which(_x6) {
+    return function which(_x5) {
         return _ref3.apply(this, arguments);
     };
 }();

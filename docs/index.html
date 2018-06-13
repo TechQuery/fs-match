@@ -16,7 +16,7 @@
   
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
+  <a href="test.html" data-ice="testLink">Test</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -67,11 +67,15 @@ fs-match root/path -r full\.name\.pattern -c 1</code>
 </code></pre>
 <h3 id="search-apps">Search apps</h3><pre><code class="lang-Shell"><code class="source-code prettyprint"># Show in stdout
 
-app-find chrome,firefox
+app-find chrome firefox
 
 # Append to a file
 
-app-find chrome,firefox .npmrc</code>
+app-find chrome firefox -f .npmrc
+
+# Set up NPM configuration
+
+app-find chrome firefox -c</code>
 </code></pre>
 <h2 id="typical-case">Typical case</h2><ol>
 <li><a href="https://easywebapp.github.io/puppeteer-browser">Puppeteer browser</a></li>

@@ -36,6 +36,7 @@ export  async function* traverse(path) {
             switch ( error.code ) {
                 case 'EPERM':
                 case 'EBUSY':
+                case 'ELOOP':
                 case 'UNKNOWN':    continue;
             }
 
@@ -50,21 +51,18 @@ export  async function* traverse(path) {
  * @param {Iterable}         iterator
  * @param {?(RegExp|string)} pattern          String pattern to match
  * @param {number}           [count=Infinity] Result count
- * @param {function}         [callback]       Call with every result
  */
-export  async function filter(iterator, pattern, count, callback) {
+export  async function* filter(iterator, pattern, count) {
 
     var index = 0;  count = ~~count || Infinity;
 
     if (pattern  &&  (! (pattern instanceof RegExp)))
         pattern = RegExp(pattern + '',  'i');
 
-    callback = (callback instanceof Function)  &&  callback;
-
     for await (let item of iterator)
         if ((! pattern)  ||  pattern.test( item ))
             if (index++ < count)
-                callback  &&  callback(item, index);
+                yield item;
             else
                 break;
 }
@@ -77,39 +75,24 @@ export  async function filter(iterator, pattern, count, callback) {
  */
 export  async function which(name) {
 
-    var path;
-
-    const setPath = file => path = file;
-
     switch ( process.platform ) {
-        case 'win32':  {
-
-            for (let root of getAppFolder()) {
-
-                await filter(
-                    traverse( root ),  `\\\\${name}\\.exe$`,  1,  setPath
-                );
-
-                if ( path )  return path;
-            }
-
+        case 'win32':
+            for (let root of getAppFolder())
+                for await (let file of filter(
+                    traverse( root ),  `\\\\${name}\\.exe$`,  1
+                ))
+                    return file;
             break;
-        }
-        case 'darwin':  {
-
+        case 'darwin':
             for (let root of [
-                '/Volumes', '/Applications', `${process.env.HOME}/Applications`
-            ]) {
-                await filter(traverse( root ),  `${name}.app$`,  1,  setPath);
-
-                if ( path )  return path;
-            }
-
+                '/Applications', `${process.env.HOME}/Applications`
+            ])
+                for await (let file of filter(
+                    traverse( root ),  `${name}.app$`,  1)
+                )
+                    return file;
             break;
-        }
         default:
-            path = execSync(`which ${name}`) + '';
+            return  execSync(`which ${name}`) + '';
     }
-
-    return path;
 }

@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 const {
-    readdirSync, readFileSync, outputFileSync, existsSync, appendFileSync
+    readdirSync, readFileSync, outputFileSync, appendFileSync
 } = require('fs-extra');
 
 const {join} = require('path'), {transform} = require('babel-core');

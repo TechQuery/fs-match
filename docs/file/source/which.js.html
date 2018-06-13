@@ -16,7 +16,7 @@
   
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
+  <a href="test.html" data-ice="testLink">Test</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -41,25 +41,41 @@
 <div class="content" data-ice="content"><h1 data-ice="title">source/which.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {which} from &apos;./core&apos;;
 
+import Commander from &apos;commander&apos;;
+
 import {appendFileSync} from &apos;fs&apos;;
 
-const write_file = process.argv[3];
+import {execSync} from &apos;child_process&apos;;
+
+
+Commander
+    .arguments(&apos;[name ...]&apos;)
+    .option(&apos;-f, --ini-file &lt;path&gt;&apos;,  &apos;Append result to an ini-like file&apos;)
+    .option(&apos;-c, --NPM-config&apos;,  &apos;Set result to local NPM configuration&apos;)
+    .parse( process.argv );
+
+const show_log = Commander.iniFile || Commander.NPMConfig;
 
 
 (async () =&gt; {
 
-    if (write_file)  console.time(&apos;Search&apos;);
+    if (show_log)  console.time(&apos;Search&apos;);
 
-    for (let name of process.argv[2].split(&apos;,&apos;)) {
+    for (let name of Commander.args) {
 
         let path = await which( name );
 
-        console.info((write_file  ?  &apos;[ Found ]  &apos;  :  &apos;&apos;)  +  path);
+        console.info(
+            ((show_log || Commander.args[1])  ?  `${name}=`  :  &apos;&apos;)  +  path
+        );
 
-        if (write_file)  appendFileSync(write_file,  `${name}=${path}\n`);
+        if ( Commander.iniFile )
+            appendFileSync(Commander.iniFile,  `${name}=${path}\n`);
+        else if ( Commander.NPMConfig )
+            execSync(`npm set ${name} ${JSON.stringify( path )}`);
     }
 
-    if (! write_file)  return;
+    if (! show_log)  return;
 
     console.info(&apos;--------------------&apos;);
 

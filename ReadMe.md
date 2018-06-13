@@ -43,11 +43,15 @@ fs-match root/path -r full\.name\.pattern -c 1
 ```Shell
 # Show in stdout
 
-app-find chrome,firefox
+app-find chrome firefox
 
 # Append to a file
 
-app-find chrome,firefox .npmrc
+app-find chrome firefox -f .npmrc
+
+# Set up NPM configuration
+
+app-find chrome firefox -c
 ```
 
 

@@ -6,6 +6,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _getIterator2 = require('babel-runtime/core-js/get-iterator');
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
@@ -16,11 +20,19 @@ var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var _core = require('./core');
 
+var _commander = require('commander');
+
+var _commander2 = _interopRequireDefault(_commander);
+
 var _fs = require('fs');
+
+var _child_process = require('child_process');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var write_file = process.argv[3];
+_commander2.default.arguments('[name ...]').option('-f, --ini-file <path>', 'Append result to an ini-like file').option('-c, --NPM-config', 'Set result to local NPM configuration').parse(process.argv);
+
+var show_log = _commander2.default.iniFile || _commander2.default.NPMConfig;
 
 (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
     var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, name, path;
@@ -30,13 +42,13 @@ var write_file = process.argv[3];
             switch (_context.prev = _context.next) {
                 case 0:
 
-                    if (write_file) console.time('Search');
+                    if (show_log) console.time('Search');
 
                     _iteratorNormalCompletion = true;
                     _didIteratorError = false;
                     _iteratorError = undefined;
                     _context.prev = 4;
-                    _iterator = (0, _getIterator3.default)(process.argv[2].split(','));
+                    _iterator = (0, _getIterator3.default)(_commander2.default.args);
 
                 case 6:
                     if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
@@ -52,9 +64,9 @@ var write_file = process.argv[3];
                     path = _context.sent;
 
 
-                    console.info((write_file ? '[ Found ]  ' : '') + path);
+                    console.info((show_log || _commander2.default.args[1] ? name + '=' : '') + path);
 
-                    if (write_file) (0, _fs.appendFileSync)(write_file, name + '=' + path + '\n');
+                    if (_commander2.default.iniFile) (0, _fs.appendFileSync)(_commander2.default.iniFile, name + '=' + path + '\n');else if (_commander2.default.NPMConfig) (0, _child_process.execSync)('npm set ' + name + ' ' + (0, _stringify2.default)(path));
 
                 case 13:
                     _iteratorNormalCompletion = true;
@@ -96,7 +108,7 @@ var write_file = process.argv[3];
                     return _context.finish(22);
 
                 case 30:
-                    if (write_file) {
+                    if (show_log) {
                         _context.next = 32;
                         break;
                     }

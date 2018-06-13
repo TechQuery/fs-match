@@ -16,7 +16,7 @@
   
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
+  <a href="test.html" data-ice="testLink">Test</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -77,6 +77,7 @@ export  async function* traverse(path) {
             switch ( error.code ) {
                 case &apos;EPERM&apos;:
                 case &apos;EBUSY&apos;:
+                case &apos;ELOOP&apos;:
                 case &apos;UNKNOWN&apos;:    continue;
             }
 
@@ -91,21 +92,18 @@ export  async function* traverse(path) {
  * @param {Iterable}         iterator
  * @param {?(RegExp|string)} pattern          String pattern to match
  * @param {number}           [count=Infinity] Result count
- * @param {function}         [callback]       Call with every result
  */
-export  async function filter(iterator, pattern, count, callback) {
+export  async function* filter(iterator, pattern, count) {
 
     var index = 0;  count = ~~count || Infinity;
 
     if (pattern  &amp;&amp;  (! (pattern instanceof RegExp)))
         pattern = RegExp(pattern + &apos;&apos;,  &apos;i&apos;);
 
-    callback = (callback instanceof Function)  &amp;&amp;  callback;
-
     for await (let item of iterator)
         if ((! pattern)  ||  pattern.test( item ))
             if (index++ &lt; count)
-                callback  &amp;&amp;  callback(item, index);
+                yield item;
             else
                 break;
 }
@@ -118,41 +116,26 @@ export  async function filter(iterator, pattern, count, callback) {
  */
 export  async function which(name) {
 
-    var path;
-
-    const setPath = file =&gt; path = file;
-
     switch ( process.platform ) {
-        case &apos;win32&apos;:  {
-
-            for (let root of getAppFolder()) {
-
-                await filter(
-                    traverse( root ),  `\\\\${name}\\.exe$`,  1,  setPath
-                );
-
-                if ( path )  return path;
-            }
-
+        case &apos;win32&apos;:
+            for (let root of getAppFolder())
+                for await (let file of filter(
+                    traverse( root ),  `\\\\${name}\\.exe$`,  1
+                ))
+                    return file;
             break;
-        }
-        case &apos;darwin&apos;:  {
-
+        case &apos;darwin&apos;:
             for (let root of [
-                &apos;/Volumes&apos;, &apos;/Applications&apos;, `${process.env.HOME}/Applications`
-            ]) {
-                await filter(traverse( root ),  `${name}.app$`,  1,  setPath);
-
-                if ( path )  return path;
-            }
-
+                &apos;/Applications&apos;, `${process.env.HOME}/Applications`
+            ])
+                for await (let file of filter(
+                    traverse( root ),  `${name}.app$`,  1)
+                )
+                    return file;
             break;
-        }
         default:
-            path = execSync(`which ${name}`) + &apos;&apos;;
+            return  execSync(`which ${name}`) + &apos;&apos;;
     }
-
-    return path;
 }
 </code></pre>
 

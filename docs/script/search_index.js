@@ -30,6 +30,90 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "",
+    "test-file/test/index.js.html#lineNumber30",
+    "Core methods",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/index.js.html#lineNumber46",
+    "Core methods Iterator filter",
+    "test"
+  ],
+  [
+    "filter source/core.js~filter,filter",
+    "test-file/test/index.js.html#lineNumber65",
+    "Core methods Iterator filter By count",
+    "test"
+  ],
+  [
+    "filter source/core.js~filter,filter",
+    "test-file/test/index.js.html#lineNumber50",
+    "Core methods Iterator filter By pattern",
+    "test"
+  ],
+  [
+    "filter source/core.js~filter,filter",
+    "test-file/test/index.js.html#lineNumber78",
+    "Core methods Iterator filter By pattern & count",
+    "test"
+  ],
+  [
+    "which source/core.js~which,which",
+    "test-file/test/index.js.html#lineNumber94",
+    "Core methods Search application executable",
+    "test"
+  ],
+  [
+    "traverse source/core.js~traverse,traverse",
+    "test-file/test/index.js.html#lineNumber34",
+    "Core methods Traverse directory tree",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/index.js.html#lineNumber105",
+    "Windows dedicated",
+    "test"
+  ],
+  [
+    "getpartition source/windows.js~getpartition,getpartition",
+    "test-file/test/index.js.html#lineNumber112",
+    "Windows dedicated Find all existing disk partitions",
+    "test"
+  ],
+  [
+    "getappfolder source/windows.js~getappfolder,getappfolder",
+    "test-file/test/index.js.html#lineNumber120",
+    "Windows dedicated Get possible paths of application installation",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/index.js.html#lineNumber132",
+    "`which` command",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/index.js.html#lineNumber161",
+    "`which` command Write to NPM configuration",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/index.js.html#lineNumber137",
+    "`which` command Write to `stdout`",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/index.js.html#lineNumber149",
+    "`which` command Write to a file",
+    "test"
+  ],
+  [
     "source/.external-ecmascript.js~array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
     "source/.external-ecmascript.js~Array",
@@ -334,5 +418,11 @@ window.esdocSearchIndex = [
     "file/source/windows.js.html",
     "source/windows.js",
     "file"
+  ],
+  [
+    "test/index.js",
+    "test-file/test/index.js.html",
+    "test/index.js",
+    "testFile"
   ]
 ]

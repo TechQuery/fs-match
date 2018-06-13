@@ -16,7 +16,7 @@
   
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
+  <a href="test.html" data-ice="testLink">Test</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -51,12 +51,15 @@ Commander
     .parse( process.argv );
 
 
-filter(
-    traverse(Commander.args[0] || &apos;.&apos;),
-    Commander.regExp,
-    Commander.count,
-    file  =&gt;  console.info( file )
-);
+(async () =&gt; {
+
+    for await (let file of filter(
+        traverse(Commander.args[0] || &apos;.&apos;),
+        Commander.regExp,
+        Commander.count
+    ))
+        console.info( file );
+})();
 </code></pre>
 
 </div>
