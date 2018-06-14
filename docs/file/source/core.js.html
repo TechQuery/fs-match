@@ -41,9 +41,11 @@
 <div class="content" data-ice="content"><h1 data-ice="title">source/core.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;babel-polyfill&apos;;
 
-import {readdir, stat, execSync} from &apos;fs-extra&apos;;
+import {readdir, stat, existsSync} from &apos;fs-extra&apos;;
 
 import {join} from &apos;path&apos;;
+
+import {execSync} from &apos;child_process&apos;;
 
 import {getPartition, getAppFolder} from &apos;./windows&apos;;
 
@@ -109,6 +111,16 @@ export  async function* filter(iterator, pattern, count) {
 }
 
 
+function Shell_which(name) {
+
+    return  (execSync(`which ${name}`) + &apos;&apos;).trim();
+}
+
+const MacAppPath = [
+    &apos;/Applications&apos;, `${process.env.HOME}/Applications`
+].filter( existsSync );
+
+
 /**
  * @param {string} name - Name (without extension name) of a executable file
  *
@@ -124,18 +136,24 @@ export  async function which(name) {
                 ))
                     return file;
             break;
-        case &apos;darwin&apos;:
-            for (let root of [
-                &apos;/Applications&apos;, `${process.env.HOME}/Applications`
-            ])
+        case &apos;darwin&apos;:  {
+
+            let path = Shell_which( name );
+
+            if ( path )  return path;
+
+            for (let root of MacAppPath)
                 for await (let file of filter(
                     traverse( root ),  `${name}.app$`,  1)
                 )
                     return file;
             break;
+        }
         default:
-            return  execSync(`which ${name}`) + &apos;&apos;;
+            return  Shell_which( name );
     }
+
+    return &apos;&apos;;
 }
 </code></pre>
 

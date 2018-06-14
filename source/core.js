@@ -1,8 +1,10 @@
 import 'babel-polyfill';
 
-import {readdir, stat, execSync} from 'fs-extra';
+import {readdir, stat, existsSync} from 'fs-extra';
 
 import {join} from 'path';
+
+import {execSync} from 'child_process';
 
 import {getPartition, getAppFolder} from './windows';
 
@@ -68,6 +70,16 @@ export  async function* filter(iterator, pattern, count) {
 }
 
 
+function Shell_which(name) {
+
+    return  (execSync(`which ${name}`) + '').trim();
+}
+
+const MacAppPath = [
+    '/Applications', `${process.env.HOME}/Applications`
+].filter( existsSync );
+
+
 /**
  * @param {string} name - Name (without extension name) of a executable file
  *
@@ -83,16 +95,22 @@ export  async function which(name) {
                 ))
                     return file;
             break;
-        case 'darwin':
-            for (let root of [
-                '/Applications', `${process.env.HOME}/Applications`
-            ])
+        case 'darwin':  {
+
+            let path = Shell_which( name );
+
+            if ( path )  return path;
+
+            for (let root of MacAppPath)
                 for await (let file of filter(
                     traverse( root ),  `${name}.app$`,  1)
                 )
                     return file;
             break;
+        }
         default:
-            return  execSync(`which ${name}`) + '';
+            return  Shell_which( name );
     }
+
+    return '';
 }
