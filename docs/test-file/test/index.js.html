@@ -209,6 +209,13 @@ describe(&apos;`which` command&apos;,  () =&gt; {
     });
 
 
+    if (process.platform !== &apos;win32&apos;)
+        it(
+            &apos;Find nothing with only empty output&apos;,
+            ()  =&gt;  (execSync(`${command}_unknown`) + &apos;&apos;).trim().should.be.empty()
+        );
+
+
     after(() =&gt; {
 
         unlinkSync(&apos;test/example.ini&apos;);

@@ -71,12 +71,17 @@ export  async function* filter(iterator, pattern, count) {
 
 
 function Shell_which(name) {
+    try {
+        return  (execSync(`which ${name}`) + '').trim();
 
-    return  (execSync(`which ${name}`) + '').trim();
+    } catch (error) {
+
+        if (! ('' + error.stdout + error.stderr).trim())  return '';
+    }
 }
 
 const MacAppPath = [
-    '/Applications', `${process.env.HOME}/Applications`
+    '/Applications', `${process.env.HOME}/Applications`, '/opt'
 ].filter( existsSync );
 
 
@@ -103,13 +108,20 @@ export  async function which(name) {
 
             for (let root of MacAppPath)
                 for await (let file of filter(
-                    traverse( root ),  `${name}.app$`,  1)
+                    traverse( root ),  `${name}\\.app$`,  1)
                 )
                     return file;
             break;
         }
-        default:
-            return  Shell_which( name );
+        default:  {
+
+            let path = Shell_which( name );
+
+            if ( path )  return path;
+
+            for await (let file  of  filter(traverse('/opt'), `${name}$`, 1))
+                return file;
+        }
     }
 
     return '';

@@ -97,6 +97,12 @@ window.esdocSearchIndex = [
   ],
   [
     "",
+    "test-file/test/index.js.html#lineNumber172",
+    "`which` command Find nothing with only empty output",
+    "test"
+  ],
+  [
+    "",
     "test-file/test/index.js.html#lineNumber161",
     "`which` command Write to NPM configuration",
     "test"
