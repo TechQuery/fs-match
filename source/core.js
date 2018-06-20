@@ -81,7 +81,7 @@ function Shell_which(name) {
 }
 
 const MacAppPath = [
-    '/Applications', `${process.env.HOME}/Applications`, '/opt'
+    '/Applications', `${process.env.HOME}/Applications`
 ].filter( existsSync );
 
 
@@ -108,8 +108,8 @@ export  async function which(name) {
 
             for (let root of MacAppPath)
                 for await (let file of filter(
-                    traverse( root ),  `${name}\\.app$`,  1)
-                )
+                    traverse( root ),  `\\.app\\/Contents\\/MacOS\\/(\\w+\\W)?${name}$`,  1
+                ))
                     return file;
             break;
         }

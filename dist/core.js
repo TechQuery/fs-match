@@ -508,7 +508,7 @@ var which = exports.which = function () {
                         _didIteratorError5 = false;
                         _iteratorError5 = undefined;
                         _context3.prev = 75;
-                        _iterator5 = (0, _asyncIterator3.default)(filter(traverse(_root), name + '\\.app$', 1));
+                        _iterator5 = (0, _asyncIterator3.default)(filter(traverse(_root), '\\.app\\/Contents\\/MacOS\\/(\\w+\\W)?' + name + '$', 1));
 
                     case 77:
                         _context3.next = 79;
@@ -734,4 +734,4 @@ function Shell_which(name) {
     }
 }
 
-var MacAppPath = ['/Applications', process.env.HOME + '/Applications', '/opt'].filter(_fsExtra.existsSync);
+var MacAppPath = ['/Applications', process.env.HOME + '/Applications'].filter(_fsExtra.existsSync);
