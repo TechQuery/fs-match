@@ -39,9 +39,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/core.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;babel-polyfill&apos;;
-
-import {readdir, stat, existsSync} from &apos;fs-extra&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {readdir, stat, existsSync} from &apos;fs-extra&apos;;
 
 import {join} from &apos;path&apos;;
 
@@ -77,6 +75,7 @@ export  async function* traverse(path) {
         } catch (error) {
 
             switch ( error.code ) {
+                case &apos;ENOENT&apos;:
                 case &apos;EPERM&apos;:
                 case &apos;EBUSY&apos;:
                 case &apos;ELOOP&apos;:

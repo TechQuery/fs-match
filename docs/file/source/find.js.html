@@ -39,12 +39,22 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/find.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Commander from &apos;commander&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">#! /usr/bin/env node
+
+import &apos;@babel/polyfill&apos;;
+
+import {packageOf, currentModulePath} from &apos;@tech_query/node-toolkit&apos;;
+
+import Commander from &apos;commander&apos;;
 
 import {traverse, filter} from &apos;./core&apos;;
 
 
+const meta = packageOf( currentModulePath() ).meta;
+
 Commander
+    .version( meta.version )
+    .description( meta.description )
     .arguments(&apos;[dir]&apos;)
     .option(&apos;-r, --reg-exp &lt;pattern&gt;&apos;,  &apos;RegExp to filter&apos;)
     .option(&apos;-c, --count &lt;number&gt;&apos;,  &apos;Result count&apos;)

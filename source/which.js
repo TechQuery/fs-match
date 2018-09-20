@@ -1,13 +1,23 @@
-import {which} from './core';
+#! /usr/bin/env node
+
+import '@babel/polyfill';
+
+import {packageOf, currentModulePath} from '@tech_query/node-toolkit';
 
 import Commander from 'commander';
+
+import {which} from './core';
 
 import {appendFileSync} from 'fs';
 
 import {execSync} from 'child_process';
 
 
+const meta = packageOf( currentModulePath() ).meta;
+
 Commander
+    .version( meta.version )
+    .description( meta.description )
     .arguments('[name ...]')
     .option('-f, --ini-file <path>',  'Append result to an ini-like file')
     .option('-c, --NPM-config',  'Set result to local NPM configuration')

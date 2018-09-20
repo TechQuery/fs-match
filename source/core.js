@@ -1,5 +1,3 @@
-import 'babel-polyfill';
-
 import {readdir, stat, existsSync} from 'fs-extra';
 
 import {join} from 'path';
@@ -36,6 +34,7 @@ export  async function* traverse(path) {
         } catch (error) {
 
             switch ( error.code ) {
+                case 'ENOENT':
                 case 'EPERM':
                 case 'EBUSY':
                 case 'ELOOP':

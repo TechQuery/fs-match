@@ -39,16 +39,26 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/which.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {which} from &apos;./core&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">#! /usr/bin/env node
+
+import &apos;@babel/polyfill&apos;;
+
+import {packageOf, currentModulePath} from &apos;@tech_query/node-toolkit&apos;;
 
 import Commander from &apos;commander&apos;;
+
+import {which} from &apos;./core&apos;;
 
 import {appendFileSync} from &apos;fs&apos;;
 
 import {execSync} from &apos;child_process&apos;;
 
 
+const meta = packageOf( currentModulePath() ).meta;
+
 Commander
+    .version( meta.version )
+    .description( meta.description )
     .arguments(&apos;[name ...]&apos;)
     .option(&apos;-f, --ini-file &lt;path&gt;&apos;,  &apos;Append result to an ini-like file&apos;)
     .option(&apos;-c, --NPM-config&apos;,  &apos;Set result to local NPM configuration&apos;)

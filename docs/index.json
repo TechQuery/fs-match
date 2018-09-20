@@ -567,7 +567,7 @@
     "__docId__": 48,
     "kind": "file",
     "name": "source/core.js",
-    "content": "import 'babel-polyfill';\n\nimport {readdir, stat, existsSync} from 'fs-extra';\n\nimport {join} from 'path';\n\nimport {execSync} from 'child_process';\n\nimport {getPartition, getAppFolder} from './windows';\n\n\n/**\n * Traverse File-system\n *\n * @param {string} path - Root path to traverse\n */\nexport  async function* traverse(path) {\n\n    if ((path === '/')  &&  (process.platform === 'win32')) {\n\n        for (let disk of getPartition())  yield* traverse( disk );\n\n        return;\n    }\n\n    for (let name  of  await readdir( path )) {\n\n        name = join(path, name);\n\n        yield name;\n\n        try {\n            if ((await stat( name )).isDirectory())\n                yield* traverse( name );\n\n        } catch (error) {\n\n            switch ( error.code ) {\n                case 'EPERM':\n                case 'EBUSY':\n                case 'ELOOP':\n                case 'UNKNOWN':    continue;\n            }\n\n            throw error;\n        }\n    }\n}\n\n/**\n * Iterator filter\n *\n * @param {Iterable}         iterator\n * @param {?(RegExp|string)} pattern          String pattern to match\n * @param {number}           [count=Infinity] Result count\n */\nexport  async function* filter(iterator, pattern, count) {\n\n    var index = 0;  count = ~~count || Infinity;\n\n    if (pattern  &&  (! (pattern instanceof RegExp)))\n        pattern = RegExp(pattern + '',  'i');\n\n    for await (let item of iterator)\n        if ((! pattern)  ||  pattern.test( item ))\n            if (index++ < count)\n                yield item;\n            else\n                break;\n}\n\n\nfunction Shell_which(name) {\n    try {\n        return  (execSync(`which ${name}`) + '').trim();\n\n    } catch (error) {\n\n        if (! ('' + error.stdout + error.stderr).trim())  return '';\n    }\n}\n\nconst MacAppPath = [\n    '/Applications', `${process.env.HOME}/Applications`\n].filter( existsSync );\n\n\n/**\n * @param {string} name - Name (without extension name) of a executable file\n *\n * @return {string} First matched path of a command\n */\nexport  async function which(name) {\n\n    switch ( process.platform ) {\n        case 'win32':\n            for (let root of getAppFolder())\n                for await (let file of filter(\n                    traverse( root ),  `\\\\\\\\${name}\\\\.exe$`,  1\n                ))\n                    return file;\n            break;\n        case 'darwin':  {\n\n            let path = Shell_which( name );\n\n            if ( path )  return path;\n\n            for (let root of MacAppPath)\n                for await (let file of filter(\n                    traverse( root ),  `\\\\.app\\\\/Contents\\\\/MacOS\\\\/(\\\\w+\\\\W)?${name}$`,  1\n                ))\n                    return file;\n            break;\n        }\n        default:  {\n\n            let path = Shell_which( name );\n\n            if ( path )  return path;\n\n            for await (let file  of  filter(traverse('/opt'), `${name}$`, 1))\n                return file;\n        }\n    }\n\n    return '';\n}\n",
+    "content": "import {readdir, stat, existsSync} from 'fs-extra';\n\nimport {join} from 'path';\n\nimport {execSync} from 'child_process';\n\nimport {getPartition, getAppFolder} from './windows';\n\n\n/**\n * Traverse File-system\n *\n * @param {string} path - Root path to traverse\n */\nexport  async function* traverse(path) {\n\n    if ((path === '/')  &&  (process.platform === 'win32')) {\n\n        for (let disk of getPartition())  yield* traverse( disk );\n\n        return;\n    }\n\n    for (let name  of  await readdir( path )) {\n\n        name = join(path, name);\n\n        yield name;\n\n        try {\n            if ((await stat( name )).isDirectory())\n                yield* traverse( name );\n\n        } catch (error) {\n\n            switch ( error.code ) {\n                case 'ENOENT':\n                case 'EPERM':\n                case 'EBUSY':\n                case 'ELOOP':\n                case 'UNKNOWN':    continue;\n            }\n\n            throw error;\n        }\n    }\n}\n\n/**\n * Iterator filter\n *\n * @param {Iterable}         iterator\n * @param {?(RegExp|string)} pattern          String pattern to match\n * @param {number}           [count=Infinity] Result count\n */\nexport  async function* filter(iterator, pattern, count) {\n\n    var index = 0;  count = ~~count || Infinity;\n\n    if (pattern  &&  (! (pattern instanceof RegExp)))\n        pattern = RegExp(pattern + '',  'i');\n\n    for await (let item of iterator)\n        if ((! pattern)  ||  pattern.test( item ))\n            if (index++ < count)\n                yield item;\n            else\n                break;\n}\n\n\nfunction Shell_which(name) {\n    try {\n        return  (execSync(`which ${name}`) + '').trim();\n\n    } catch (error) {\n\n        if (! ('' + error.stdout + error.stderr).trim())  return '';\n    }\n}\n\nconst MacAppPath = [\n    '/Applications', `${process.env.HOME}/Applications`\n].filter( existsSync );\n\n\n/**\n * @param {string} name - Name (without extension name) of a executable file\n *\n * @return {string} First matched path of a command\n */\nexport  async function which(name) {\n\n    switch ( process.platform ) {\n        case 'win32':\n            for (let root of getAppFolder())\n                for await (let file of filter(\n                    traverse( root ),  `\\\\\\\\${name}\\\\.exe$`,  1\n                ))\n                    return file;\n            break;\n        case 'darwin':  {\n\n            let path = Shell_which( name );\n\n            if ( path )  return path;\n\n            for (let root of MacAppPath)\n                for await (let file of filter(\n                    traverse( root ),  `\\\\.app\\\\/Contents\\\\/MacOS\\\\/(\\\\w+\\\\W)?${name}$`,  1\n                ))\n                    return file;\n            break;\n        }\n        default:  {\n\n            let path = Shell_which( name );\n\n            if ( path )  return path;\n\n            for await (let file  of  filter(traverse('/opt'), `${name}$`, 1))\n                return file;\n        }\n    }\n\n    return '';\n}\n",
     "static": true,
     "longname": "D:/TechQuery/fs-match/source/core.js",
     "access": "public",
@@ -588,7 +588,7 @@
     "importPath": "fs-match/source/core.js",
     "importStyle": "{traverse}",
     "description": "Traverse File-system",
-    "lineNumber": 17,
+    "lineNumber": 15,
     "params": [
       {
         "nullable": null,
@@ -617,7 +617,7 @@
     "importPath": "fs-match/source/core.js",
     "importStyle": "{filter}",
     "description": "Iterator filter",
-    "lineNumber": 57,
+    "lineNumber": 56,
     "params": [
       {
         "nullable": null,
@@ -669,7 +669,7 @@
     "importPath": "fs-match/source/core.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 73,
+    "lineNumber": 72,
     "undocument": true,
     "params": [
       {
@@ -698,7 +698,7 @@
     "importPath": "fs-match/source/core.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 83,
+    "lineNumber": 82,
     "undocument": true,
     "type": {
       "types": [
@@ -721,7 +721,7 @@
     "importPath": "fs-match/source/core.js",
     "importStyle": "{which}",
     "description": "",
-    "lineNumber": 93,
+    "lineNumber": 92,
     "params": [
       {
         "nullable": null,
@@ -747,7 +747,7 @@
     "__docId__": 54,
     "kind": "file",
     "name": "source/find.js",
-    "content": "import Commander from 'commander';\n\nimport {traverse, filter} from './core';\n\n\nCommander\n    .arguments('[dir]')\n    .option('-r, --reg-exp <pattern>',  'RegExp to filter')\n    .option('-c, --count <number>',  'Result count')\n    .parse( process.argv );\n\n\n(async () => {\n\n    for await (let file of filter(\n        traverse(Commander.args[0] || '.'),\n        Commander.regExp,\n        Commander.count\n    ))\n        console.info( file );\n})();\n",
+    "content": "#! /usr/bin/env node\n\nimport '@babel/polyfill';\n\nimport {packageOf, currentModulePath} from '@tech_query/node-toolkit';\n\nimport Commander from 'commander';\n\nimport {traverse, filter} from './core';\n\n\nconst meta = packageOf( currentModulePath() ).meta;\n\nCommander\n    .version( meta.version )\n    .description( meta.description )\n    .arguments('[dir]')\n    .option('-r, --reg-exp <pattern>',  'RegExp to filter')\n    .option('-c, --count <number>',  'Result count')\n    .parse( process.argv );\n\n\n(async () => {\n\n    for await (let file of filter(\n        traverse(Commander.args[0] || '.'),\n        Commander.regExp,\n        Commander.count\n    ))\n        console.info( file );\n})();\n",
     "static": true,
     "longname": "D:/TechQuery/fs-match/source/find.js",
     "access": "public",
@@ -756,9 +756,30 @@
   },
   {
     "__docId__": 55,
+    "kind": "variable",
+    "name": "meta",
+    "memberof": "source/find.js",
+    "static": true,
+    "longname": "source/find.js~meta",
+    "access": "public",
+    "export": false,
+    "importPath": "fs-match/source/find.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 56,
     "kind": "file",
     "name": "source/which.js",
-    "content": "import {which} from './core';\n\nimport Commander from 'commander';\n\nimport {appendFileSync} from 'fs';\n\nimport {execSync} from 'child_process';\n\n\nCommander\n    .arguments('[name ...]')\n    .option('-f, --ini-file <path>',  'Append result to an ini-like file')\n    .option('-c, --NPM-config',  'Set result to local NPM configuration')\n    .parse( process.argv );\n\nconst show_log = Commander.iniFile || Commander.NPMConfig;\n\n\n(async () => {\n\n    if (show_log)  console.time('Search');\n\n    for (let name of Commander.args) {\n\n        let path = await which( name );\n\n        console.info(\n            ((show_log || Commander.args[1])  ?  `${name}=`  :  '')  +  path\n        );\n\n        if ( Commander.iniFile )\n            appendFileSync(Commander.iniFile,  `${name}=${path}\\n`);\n        else if ( Commander.NPMConfig )\n            execSync(`npm set ${name} ${JSON.stringify( path )}`);\n    }\n\n    if (! show_log)  return;\n\n    console.info('--------------------');\n\n    console.timeEnd('Search');\n})();\n",
+    "content": "#! /usr/bin/env node\n\nimport '@babel/polyfill';\n\nimport {packageOf, currentModulePath} from '@tech_query/node-toolkit';\n\nimport Commander from 'commander';\n\nimport {which} from './core';\n\nimport {appendFileSync} from 'fs';\n\nimport {execSync} from 'child_process';\n\n\nconst meta = packageOf( currentModulePath() ).meta;\n\nCommander\n    .version( meta.version )\n    .description( meta.description )\n    .arguments('[name ...]')\n    .option('-f, --ini-file <path>',  'Append result to an ini-like file')\n    .option('-c, --NPM-config',  'Set result to local NPM configuration')\n    .parse( process.argv );\n\nconst show_log = Commander.iniFile || Commander.NPMConfig;\n\n\n(async () => {\n\n    if (show_log)  console.time('Search');\n\n    for (let name of Commander.args) {\n\n        let path = await which( name );\n\n        console.info(\n            ((show_log || Commander.args[1])  ?  `${name}=`  :  '')  +  path\n        );\n\n        if ( Commander.iniFile )\n            appendFileSync(Commander.iniFile,  `${name}=${path}\\n`);\n        else if ( Commander.NPMConfig )\n            execSync(`npm set ${name} ${JSON.stringify( path )}`);\n    }\n\n    if (! show_log)  return;\n\n    console.info('--------------------');\n\n    console.timeEnd('Search');\n})();\n",
     "static": true,
     "longname": "D:/TechQuery/fs-match/source/which.js",
     "access": "public",
@@ -766,12 +787,12 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 56,
+    "__docId__": 57,
     "kind": "variable",
-    "name": "show_log",
+    "name": "meta",
     "memberof": "source/which.js",
     "static": true,
-    "longname": "source/which.js~show_log",
+    "longname": "source/which.js~meta",
     "access": "public",
     "export": false,
     "importPath": "fs-match/source/which.js",
@@ -787,7 +808,28 @@
     "ignore": true
   },
   {
-    "__docId__": 57,
+    "__docId__": 58,
+    "kind": "variable",
+    "name": "show_log",
+    "memberof": "source/which.js",
+    "static": true,
+    "longname": "source/which.js~show_log",
+    "access": "public",
+    "export": false,
+    "importPath": "fs-match/source/which.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 26,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 59,
     "kind": "file",
     "name": "source/windows.js",
     "content": "import {existsSync, readdirSync} from 'fs';\n\nconst Env = process.env;\n\n\nvar disk;\n/**\n * @return {string[]} Acessible disk partitions of current Windows\n */\nexport  function getPartition() {\n\n    return  disk  ||  (disk = 'CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(disk => {\n\n        disk = `${disk}:\\\\`;\n\n        if (existsSync( disk )  &&  readdirSync( disk )[2])  return disk;\n\n    }).filter( Boolean ));\n}\n\n\nvar folder;\n/**\n * @return {string[]} Acessible application folders of current Windows\n */\nexport  function getAppFolder() {\n\n    return  folder  ||  (folder = [ ].concat(... getPartition().map(disk => {\n\n        const list = [ ];\n\n        for (let path of [\n            Env.PROGRAMFILES, Env['ProgramFiles(x86)'], Env.LOCALAPPDATA\n        ])\n            if (existsSync(path = disk + path.slice(3)))  list.push( path );\n\n        return list;\n    })));\n}\n",
@@ -798,7 +840,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 58,
+    "__docId__": 60,
     "kind": "variable",
     "name": "Env",
     "memberof": "source/windows.js",
@@ -819,7 +861,7 @@
     "ignore": true
   },
   {
-    "__docId__": 59,
+    "__docId__": 61,
     "kind": "function",
     "name": "getPartition",
     "memberof": "source/windows.js",
@@ -844,7 +886,7 @@
     "params": []
   },
   {
-    "__docId__": 60,
+    "__docId__": 62,
     "kind": "function",
     "name": "getAppFolder",
     "memberof": "source/windows.js",
@@ -878,14 +920,14 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\n  \"name\": \"fs-match\",\n  \"version\": \"1.3.4\",\n  \"description\": \"A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9\",\n  \"main\": \"dist/core.js\",\n  \"bin\": {\n    \"fs-match\": \"dist/find.js\",\n    \"app-find\": \"dist/which.js\"\n  },\n  \"engines\": {\n    \"node\": \"^5.12.0\"\n  },\n  \"scripts\": {\n    \"build\": \"node dist/compile source/ dist/  &&  esdoc\",\n    \"prepublishOnly\": \"npm run build\",\n    \"start\": \"web-server docs/ -o\",\n    \"lint\": \"eslint source/\",\n    \"check\": \"mocha -r babel-register -r babel-polyfill -r should --no-timeouts -c --inline-diffs\",\n    \"test\": \"npm run check -- --exit\",\n    \"debug\": \"npm run check -- --inspect-brk\",\n    \"precommit\": \"npm run lint  &&  npm test\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/TechQuery/fs-match.git\"\n  },\n  \"keywords\": [\n    \"search\",\n    \"filesystem\",\n    \"regex-match\",\n    \"command-line\",\n    \"async\",\n    \"iterator\"\n  ],\n  \"author\": \"shiy007@qq.com\",\n  \"license\": \"LGPL-3.0\",\n  \"bugs\": {\n    \"url\": \"https://github.com/TechQuery/fs-match/issues\"\n  },\n  \"homepage\": \"https://techquery.github.io/fs-match/\",\n  \"devDependencies\": {\n    \"babel-core\": \"^6.26.3\",\n    \"babel-eslint\": \"^8.2.3\",\n    \"babel-plugin-transform-async-generator-functions\": \"^6.24.1\",\n    \"babel-plugin-transform-runtime\": \"^6.23.0\",\n    \"babel-preset-env\": \"^1.7.0\",\n    \"babel-register\": \"^6.26.0\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^4.19.1\",\n    \"husky\": \"^0.14.3\",\n    \"koapache\": \"^0.2.3\",\n    \"mocha\": \"^5.2.0\",\n    \"should\": \"^13.2.1\"\n  },\n  \"dependencies\": {\n    \"babel-polyfill\": \"^6.26.0\",\n    \"babel-runtime\": \"^6.26.0\",\n    \"commander\": \"^2.15.1\",\n    \"fs-extra\": \"^6.0.1\"\n  },\n  \"babel\": {\n    \"presets\": [\n      \"env\"\n    ],\n    \"plugins\": [\n      \"transform-async-generator-functions\",\n      \"transform-runtime\"\n    ]\n  }\n}\n",
+    "content": "{\n  \"name\": \"fs-match\",\n  \"version\": \"1.3.5\",\n  \"description\": \"A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9\",\n  \"keywords\": [\n    \"search\",\n    \"filesystem\",\n    \"regex-match\",\n    \"command-line\",\n    \"async\",\n    \"iterator\"\n  ],\n  \"author\": \"shiy007@qq.com\",\n  \"license\": \"LGPL-3.0\",\n  \"homepage\": \"https://techquery.github.io/fs-match/\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/TechQuery/fs-match.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/TechQuery/fs-match/issues\"\n  },\n  \"main\": \"dist/core.js\",\n  \"bin\": {\n    \"fs-match\": \"dist/find.js\",\n    \"app-find\": \"dist/which.js\"\n  },\n  \"engines\": {\n    \"node\": \"^5.12.0\"\n  },\n  \"scripts\": {\n    \"lint\": \"eslint source/ test/ --fix\",\n    \"compile\": \"babel source/ -d dist/\",\n    \"check\": \"mocha -r @babel/register -r @babel/polyfill -r should --no-timeouts -c --inline-diffs\",\n    \"test\": \"npm run check -- --exit\",\n    \"debug\": \"npm run check -- --inspect-brk\",\n    \"build\": \"npm run lint  &&  npm run compile  &&  npm test\",\n    \"prepublishOnly\": \"npm run build\",\n    \"precommit\": \"npm run build  &&  esdoc  &&  git add .\",\n    \"start\": \"web-server docs/ -o\"\n  },\n  \"dependencies\": {\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"@babel/runtime\": \"^7.0.0\",\n    \"@tech_query/node-toolkit\": \"^0.6.0\",\n    \"commander\": \"^2.18.0\",\n    \"fs-extra\": \"^7.0.0\"\n  },\n  \"devDependencies\": {\n    \"@babel/cli\": \"^7.1.0\",\n    \"@babel/core\": \"^7.1.0\",\n    \"@babel/plugin-proposal-async-generator-functions\": \"^7.1.0\",\n    \"@babel/plugin-transform-runtime\": \"^7.1.0\",\n    \"@babel/preset-env\": \"^7.1.0\",\n    \"@babel/register\": \"^7.0.0\",\n    \"babel-eslint\": \"^9.0.0\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^5.6.0\",\n    \"husky\": \"^0.14.3\",\n    \"koapache\": \"^1.0.4\",\n    \"mocha\": \"^5.2.0\",\n    \"should\": \"^13.2.3\"\n  },\n  \"babel\": {\n    \"presets\": [\n      \"@babel/preset-env\"\n    ],\n    \"plugins\": [\n      \"@babel/plugin-proposal-async-generator-functions\",\n      \"@babel/plugin-transform-runtime\"\n    ]\n  }\n}\n",
     "longname": "D:\\TechQuery\\fs-match\\package.json",
     "name": "package.json",
     "static": true,
     "access": "public"
   },
   {
-    "__docId__": 61,
+    "__docId__": 63,
     "kind": "testFile",
     "name": "test/index.js",
     "content": "import {traverse, filter, which} from '../source/core';\n\nimport {statSync, readFileSync, unlinkSync, existsSync} from 'fs';\n\nimport {isAbsolute} from 'path';\n\nimport {getPartition, getAppFolder} from '../source/windows';\n\nimport {release} from 'os';\n\nimport { execSync } from 'child_process';\n\n\nconst directory = [\n        'docs/ast',\n        'docs/ast/source',\n        'docs/css',\n        'docs/file',\n        'docs/file/source',\n        'docs/function',\n        'docs/image',\n        'docs/script',\n        'docs/script/prettify',\n        'docs/test-file',\n        'docs/test-file/test'\n    ],\n    NodeExe = `node${(process.platform === 'win32')  ?  '.exe'  :  ''}`;\n\n\ndescribe('Core methods',  () => {\n    /**\n     * @test {traverse}\n     */\n    it('Traverse directory tree',  async () => {\n\n        const folder = [ ];\n\n        for await (let name of traverse('./docs'))\n            if (statSync( name ).isDirectory())\n                folder.push( name.replace(/\\\\/g, '/') );\n\n        folder.should.be.eql( directory );\n    });\n\n\n    describe('Iterator filter',  () => {\n        /**\n         * @test {filter}\n         */\n        it('By pattern',  async () => {\n\n            const folder = [ ];\n\n            for await (let name of filter(\n                traverse('./docs'), /(\\\\|\\/)[^\\\\/.]+$/\n            ))\n                folder.push( name.replace(/\\\\/g, '/') );\n\n            folder.should.be.eql( directory );\n        });\n\n        /**\n         * @test {filter}\n         */\n        it('By count',  async () => {\n\n            const folder = [ ];\n\n            for await (let name  of  filter(traverse('./docs'), null, 2))\n                folder.push( name.replace(/\\\\/g, '/') );\n\n            folder.should.be.eql( directory.slice(0, 2) );\n        });\n\n        /**\n         * @test {filter}\n         */\n        it('By pattern & count',  async () => {\n\n            const folder = [ ];\n\n            for await (let name of filter(\n                traverse('./docs'), /(\\\\|\\/)[^\\\\/.]+$/, 3\n            ))\n                folder.push( name.replace(/\\\\/g, '/') );\n\n            folder.should.be.eql( directory.slice(0, 3) );\n        });\n    });\n\n    /**\n     * @test {which}\n     */\n    it('Search application executable',  async () => {\n\n        const path = await which('node');\n\n        isAbsolute( path ).should.be.true();\n\n        path.should.be.endWith( NodeExe );\n    });\n});\n\n\ndescribe('Windows dedicated',  () => {\n\n    if (process.platform !== 'win32')  return;\n\n    /**\n     * @test {getPartition}\n     */\n    it(\n        'Find all existing disk partitions',\n        () => getPartition().should.be.containEql('C:\\\\')\n    );\n\n    /**\n     * @test {getAppFolder}\n     */\n    it('Get possible paths of application installation',  () => {\n\n        const path = getAppFolder();\n\n        path.should.be.containEql('C:\\\\Program Files');\n\n        if (parseInt( release() ) > 5)\n            path.should.matchAny( /C:\\\\Users\\\\.+?\\\\AppData\\\\Local/ );\n    });\n});\n\n\ndescribe('`which` command',  () => {\n\n    const command = 'node dist/which node';\n\n\n    it('Write to `stdout`',  () => {\n\n        const path = (execSync( command ) + '').trim();\n\n        isAbsolute( path ).should.be.true();\n\n        path.should.be.endWith( NodeExe );\n\n        existsSync( path ).should.be.true();\n    });\n\n\n    it('Write to a file',  () => {\n\n        const log = execSync(`${command} -f test/example.ini`) + '';\n\n        log.should.match( /node=[\\s\\S]+?node[\\s\\S]+-+\\nSearch: \\d+(\\.\\d+)?ms/ );\n\n        (readFileSync('test/example.ini') + '').trim().should.be.equal(\n            log.split('\\n')[0]\n        );\n    });\n\n\n    it('Write to NPM configuration',  () => {\n\n        const log = execSync(`${command} -c`) + '';\n\n        (execSync('npm get node') + '').trim().should.be.equal(\n            log.split( /=|\\n/ )[1]\n        );\n    });\n\n\n    if (process.platform !== 'win32')\n        it(\n            'Find nothing with only empty output',\n            ()  =>  (execSync(`${command}_unknown`) + '').trim().should.be.empty()\n        );\n\n\n    after(() => {\n\n        unlinkSync('test/example.ini');\n\n        execSync('npm config delete node');\n    });\n});\n",
@@ -896,7 +938,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 62,
+    "__docId__": 64,
     "kind": "test",
     "name": "describe0",
     "testId": 0,
@@ -909,7 +951,7 @@
     "lineNumber": 30
   },
   {
-    "__docId__": 63,
+    "__docId__": 65,
     "kind": "test",
     "name": "it1",
     "testId": 1,
@@ -925,7 +967,7 @@
     ]
   },
   {
-    "__docId__": 64,
+    "__docId__": 66,
     "kind": "test",
     "name": "describe2",
     "testId": 2,
@@ -938,7 +980,7 @@
     "lineNumber": 46
   },
   {
-    "__docId__": 65,
+    "__docId__": 67,
     "kind": "test",
     "name": "it3",
     "testId": 3,
@@ -954,7 +996,7 @@
     ]
   },
   {
-    "__docId__": 66,
+    "__docId__": 68,
     "kind": "test",
     "name": "it4",
     "testId": 4,
@@ -970,7 +1012,7 @@
     ]
   },
   {
-    "__docId__": 67,
+    "__docId__": 69,
     "kind": "test",
     "name": "it5",
     "testId": 5,
@@ -986,7 +1028,7 @@
     ]
   },
   {
-    "__docId__": 68,
+    "__docId__": 70,
     "kind": "test",
     "name": "it6",
     "testId": 6,
@@ -1002,7 +1044,7 @@
     ]
   },
   {
-    "__docId__": 69,
+    "__docId__": 71,
     "kind": "test",
     "name": "describe7",
     "testId": 7,
@@ -1015,7 +1057,7 @@
     "lineNumber": 105
   },
   {
-    "__docId__": 70,
+    "__docId__": 72,
     "kind": "test",
     "name": "it8",
     "testId": 8,
@@ -1031,7 +1073,7 @@
     ]
   },
   {
-    "__docId__": 71,
+    "__docId__": 73,
     "kind": "test",
     "name": "it9",
     "testId": 9,
@@ -1047,7 +1089,7 @@
     ]
   },
   {
-    "__docId__": 72,
+    "__docId__": 74,
     "kind": "test",
     "name": "describe10",
     "testId": 10,
@@ -1060,7 +1102,7 @@
     "lineNumber": 132
   },
   {
-    "__docId__": 73,
+    "__docId__": 75,
     "kind": "test",
     "name": "it11",
     "testId": 11,
@@ -1073,7 +1115,7 @@
     "lineNumber": 137
   },
   {
-    "__docId__": 74,
+    "__docId__": 76,
     "kind": "test",
     "name": "it12",
     "testId": 12,
@@ -1086,7 +1128,7 @@
     "lineNumber": 149
   },
   {
-    "__docId__": 75,
+    "__docId__": 77,
     "kind": "test",
     "name": "it13",
     "testId": 13,
@@ -1099,7 +1141,7 @@
     "lineNumber": 161
   },
   {
-    "__docId__": 76,
+    "__docId__": 78,
     "kind": "test",
     "name": "it14",
     "testId": 14,
