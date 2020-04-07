@@ -32,8 +32,9 @@ bower_components
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directories
+# Dependency
 node_modules/
+package-lock.json
 jspm_packages/
 
 # Typescript v1 declaration files
@@ -57,5 +58,6 @@ typings/
 # dotenv environment variables file
 .env
 
-# NPM production code
+# Building
 dist/
+docs/

@@ -1,9 +1,5 @@
 #! /usr/bin/env node
 
-import '@babel/polyfill';
-
-import {packageOf, currentModulePath} from '@tech_query/node-toolkit';
-
 import Commander from 'commander';
 
 import {which} from './core';
@@ -13,11 +9,9 @@ import {appendFileSync} from 'fs';
 import {execSync} from 'child_process';
 
 
-const meta = packageOf( currentModulePath() ).meta;
-
 Commander
-    .version( meta.version )
-    .description( meta.description )
+    .version('1.4.0')
+    .description('Search App paths with App Name')
     .arguments('[name ...]')
     .option('-f, --ini-file <path>',  'Append result to an ini-like file')
     .option('-c, --NPM-config',  'Set result to local NPM configuration')
@@ -30,9 +24,9 @@ const show_log = Commander.iniFile || Commander.NPMConfig;
 
     if (show_log)  console.time('Search');
 
-    for (let name of Commander.args) {
+    for (const name of Commander.args) {
 
-        let path = await which( name );
+        const path = await which( name );
 
         console.info(
             ((show_log || Commander.args[1])  ?  `${name}=`  :  '')  +  path

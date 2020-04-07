@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "esModuleInterop": true,
+        "lib": ["ES2019"],
+        "target": "ES6",
+        "declaration": true,
+        "outDir": "dist/"
+    },
+    "include": ["source/*.ts"],
+    "typedocOptions": {
+        "name": "FS Match",
+        "mode": "file",
+        "excludeExternals": true,
+        "excludeNotExported": true,
+        "readme": "./ReadMe.md",
+        "out": "docs/"
+    }
+}

@@ -12,17 +12,10 @@ import { execSync } from 'child_process';
 
 
 const directory = [
-        'docs/ast',
-        'docs/ast/source',
-        'docs/css',
-        'docs/file',
-        'docs/file/source',
-        'docs/function',
-        'docs/image',
-        'docs/script',
-        'docs/script/prettify',
-        'docs/test-file',
-        'docs/test-file/test'
+        'docs/assets',
+        'docs/assets/css',
+        'docs/assets/images',
+        'docs/assets/js'
     ],
     NodeExe = `node${(process.platform === 'win32')  ?  '.exe'  :  ''}`;
 
@@ -35,11 +28,11 @@ describe('Core methods',  () => {
 
         const folder = [ ];
 
-        for await (let name of traverse('./docs'))
+        for await (const name of traverse('./docs'))
             if (statSync( name ).isDirectory())
                 folder.push( name.replace(/\\/g, '/') );
 
-        folder.should.be.eql( directory );
+        expect(folder).toEqual( expect.arrayContaining(directory) );
     });
 
 
@@ -51,12 +44,12 @@ describe('Core methods',  () => {
 
             const folder = [ ];
 
-            for await (let name of filter(
+            for await (const name of filter(
                 traverse('./docs'), /(\\|\/)[^\\/.]+$/
             ))
                 folder.push( name.replace(/\\/g, '/') );
 
-            folder.should.be.eql( directory );
+            expect(folder).toEqual( expect.arrayContaining(directory) );
         });
 
         /**
@@ -66,10 +59,10 @@ describe('Core methods',  () => {
 
             const folder = [ ];
 
-            for await (let name  of  filter(traverse('./docs'), null, 2))
+            for await (const name  of  filter(traverse('./docs'), null, 2))
                 folder.push( name.replace(/\\/g, '/') );
 
-            folder.should.be.eql( directory.slice(0, 2) );
+            expect(folder).toEqual( expect.arrayContaining(directory.slice(0, 2)) );
         });
 
         /**
@@ -79,12 +72,12 @@ describe('Core methods',  () => {
 
             const folder = [ ];
 
-            for await (let name of filter(
+            for await (const name of filter(
                 traverse('./docs'), /(\\|\/)[^\\/.]+$/, 3
             ))
                 folder.push( name.replace(/\\/g, '/') );
 
-            folder.should.be.eql( directory.slice(0, 3) );
+            expect(folder).toEqual( expect.arrayContaining(directory.slice(0, 3)) );
         });
     });
 
@@ -95,9 +88,9 @@ describe('Core methods',  () => {
 
         const path = await which('node');
 
-        isAbsolute( path ).should.be.true();
+        expect(isAbsolute( path )).toBe(true);
 
-        path.should.be.endWith( NodeExe );
+        expect(path.endsWith(NodeExe)).toBe(true);
     });
 });
 
@@ -111,7 +104,7 @@ describe('Windows dedicated',  () => {
      */
     it(
         'Find all existing disk partitions',
-        () => getPartition().should.be.containEql('C:\\')
+        () => expect(getPartition()).toContainEqual('C:\\')
     );
 
     /**
@@ -121,10 +114,10 @@ describe('Windows dedicated',  () => {
 
         const path = getAppFolder();
 
-        path.should.be.containEql('C:\\Program Files');
+        expect(path).toContainEqual('C:\\Program Files');
 
         if (parseInt( release() ) > 5)
-            path.should.matchAny( /C:\\Users\\.+?\\AppData\\Local/ );
+            expect(path.find(item => /C:\\Users\\.+?\\AppData\\Local/.test(item))).toBeTruthy();
     });
 });
 
@@ -138,11 +131,11 @@ describe('`which` command',  () => {
 
         const path = (execSync( command ) + '').trim();
 
-        isAbsolute( path ).should.be.true();
+        expect(isAbsolute( path )).toBe(true);
 
-        path.should.be.endWith( NodeExe );
+        expect(path.endsWith(NodeExe)).toBe(true);
 
-        existsSync( path ).should.be.true();
+        expect(existsSync( path )).toBe(true);
     });
 
 
@@ -150,9 +143,9 @@ describe('`which` command',  () => {
 
         const log = execSync(`${command} -f test/example.ini`) + '';
 
-        log.should.match( /node=[\s\S]+?node[\s\S]+-+\nSearch: \d+(\.\d+)?ms/ );
+        expect(log).toMatch( /node=[\s\S]+?node[\s\S]+-+\nSearch: \d+(\.\d+)?ms/ );
 
-        (readFileSync('test/example.ini') + '').trim().should.be.equal(
+        expect((readFileSync('test/example.ini') + '').trim()).toBe(
             log.split('\n')[0]
         );
     });
@@ -162,7 +155,7 @@ describe('`which` command',  () => {
 
         const log = execSync(`${command} -c`) + '';
 
-        (execSync('npm get node') + '').trim().should.be.equal(
+        expect((execSync('npm get node') + '').trim()).toBe(
             log.split( /=|\n/ )[1]
         );
     });
@@ -171,11 +164,11 @@ describe('`which` command',  () => {
     if (process.platform !== 'win32')
         it(
             'Find nothing with only empty output',
-            ()  =>  (execSync(`${command}_unknown`) + '').trim().should.be.empty()
+            ()  =>  expect((execSync(`${command}_unknown`) + '').trim()).toBe('')
         );
 
 
-    after(() => {
+    afterAll(() => {
 
         unlinkSync('test/example.ini');
 

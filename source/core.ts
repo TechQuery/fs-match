@@ -7,16 +7,18 @@ import {execSync} from 'child_process';
 import {getPartition, getAppFolder} from './windows';
 
 
+const { platform, env } = process
+
 /**
  * Traverse File-system
  *
- * @param {string} path - Root path to traverse
+ * @param path - Root path to traverse
  */
-export  async function* traverse(path) {
+export  async function* traverse(path: string): AsyncGenerator<string> {
 
-    if ((path === '/')  &&  (process.platform === 'win32')) {
+    if ((path === '/')  &&  (platform === 'win32')) {
 
-        for (let disk of getPartition())  yield* traverse( disk );
+        for (const disk of getPartition())  yield* traverse( disk );
 
         return;
     }
@@ -49,19 +51,19 @@ export  async function* traverse(path) {
 /**
  * Iterator filter
  *
- * @param {Iterable}         iterator
- * @param {?(RegExp|string)} pattern          String pattern to match
- * @param {number}           [count=Infinity] Result count
+ * @param iterator
+ * @param pattern  String pattern to match
+ * @param count    Result count
  */
-export  async function* filter(iterator, pattern, count) {
+export  async function* filter(iterator: AsyncIterable<string>, pattern?: RegExp | string, count = Infinity) {
 
     var index = 0;  count = ~~count || Infinity;
 
     if (pattern  &&  (! (pattern instanceof RegExp)))
         pattern = RegExp(pattern + '',  'i');
 
-    for await (let item of iterator)
-        if ((! pattern)  ||  pattern.test( item ))
+    for await (const item of iterator)
+        if ((! pattern)  ||  (pattern as RegExp).test( item ))
             if (index++ < count)
                 yield item;
             else
@@ -69,7 +71,7 @@ export  async function* filter(iterator, pattern, count) {
 }
 
 
-function Shell_which(name) {
+function Shell_which(name: string) {
     try {
         return  (execSync(`which ${name}`) + '').trim();
 
@@ -80,33 +82,33 @@ function Shell_which(name) {
 }
 
 const MacAppPath = [
-    '/Applications', `${process.env.HOME}/Applications`
+    '/Applications', `${env.HOME}/Applications`
 ].filter( existsSync );
 
 
 /**
- * @param {string} name - Name (without extension name) of a executable file
+ * @param name - Name (without extension name) of a executable file
  *
- * @return {string} First matched path of a command
+ * @return First matched path of a command
  */
-export  async function which(name) {
+export  async function which(name: string): Promise<string> {
 
-    switch ( process.platform ) {
+    switch ( platform ) {
         case 'win32':
-            for (let root of getAppFolder())
-                for await (let file of filter(
+            for (const root of getAppFolder())
+                for await (const file of filter(
                     traverse( root ),  `\\\\${name}\\.exe$`,  1
                 ))
                     return file;
             break;
         case 'darwin':  {
 
-            let path = Shell_which( name );
+            const path = Shell_which( name );
 
             if ( path )  return path;
 
-            for (let root of MacAppPath)
-                for await (let file of filter(
+            for (const root of MacAppPath)
+                for await (const file of filter(
                     traverse( root ),  `\\.app\\/Contents\\/MacOS\\/(\\w+\\W)?${name}$`,  1
                 ))
                     return file;
@@ -114,11 +116,11 @@ export  async function which(name) {
         }
         default:  {
 
-            let path = Shell_which( name );
+            const path = Shell_which( name );
 
             if ( path )  return path;
 
-            for await (let file  of  filter(traverse('/opt'), `${name}$`, 1))
+            for await (const file  of  filter(traverse('/opt'), `${name}$`, 1))
                 return file;
         }
     }

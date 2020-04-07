@@ -6,21 +6,16 @@ A NodeJS package for finding folders, files & apps by Regular expression based o
 
 [![NPM](https://nodei.co/npm/fs-match.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/fs-match/)
 
-
-
 ## Use in another module
 
- - Example
-   1. [find](source/find.js)
-   2. [which](source/which.js)
- - Document
-   - Online: [URL](https://techquery.github.io/fs-match/) or `npm docs`
-   - Offline: `npm start`
-
-
+-   Example
+    1. [find](source/find.js)
+    2. [which](source/which.js)
+-   Document
+    -   Online: [URL](https://tech-query.me/fs-match/) or `npm docs`
+    -   Offline: `npm start`
 
 ## Use in Command-line shell
-
 
 ### Search files
 
@@ -54,7 +49,6 @@ app-find chrome firefox -f .npmrc
 app-find chrome firefox -c
 ```
 
-
 ## Typical case
 
- 1. [Puppeteer browser](https://easywebapp.github.io/puppeteer-browser)
+1.  [Puppeteer browser](https://easywebapp.github.io/puppeteer-browser)

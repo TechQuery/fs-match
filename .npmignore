@@ -2,5 +2,4 @@ docs/
 test/
 .editorconfig
 .eslintrc.json
-.esdoc.json
-.github/
+tsconfig.lint.json
