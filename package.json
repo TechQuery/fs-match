@@ -1,16 +1,17 @@
 {
     "name": "fs-match",
     "version": "1.4.0",
-    "description": "A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9",
+    "description": "A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9 & TypeScript",
     "keywords": [
         "search",
         "filesystem",
         "regex-match",
         "command-line",
         "async",
-        "iterator"
+        "iterator",
+        "typescript"
     ],
-    "author": "shiy007@qq.com",
+    "author": "shiy2008@gmail.com",
     "license": "LGPL-3.0",
     "homepage": "https://tech-query.me/fs-match/",
     "repository": {
@@ -59,8 +60,12 @@
         "tabWidth": 4
     },
     "lint-staged": {
-        "*.{md,json}": [
+        "*.{md,json,yml}": [
             "prettier --write"
+        ],
+        "*.ts": [
+            "prettier --write",
+            "eslint --fix"
         ]
     },
     "jest": {

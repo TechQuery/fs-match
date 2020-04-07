@@ -1,16 +1,17 @@
 # FS match
 
-A NodeJS package for finding folders, files & apps by Regular expression based on [Asynchronous iteration of ES 9](https://babeljs.io/docs/plugins/transform-async-generator-functions/).
+A NodeJS package for finding folders, files & apps by Regular expression based on [Asynchronous iteration of ES 9][1] & TypeScript.
 
-[![NPM Dependency](https://david-dm.org/TechQuery/fs-match.svg)](https://david-dm.org/TechQuery/fs-match)
+[![NPM Dependency](https://david-dm.org/TechQuery/fs-match.svg)][2]
+[![Build Status](https://www.travis-ci.com/TechQuery/fs-match.svg?branch=master)][3]
 
-[![NPM](https://nodei.co/npm/fs-match.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/fs-match/)
+[![NPM](https://nodei.co/npm/fs-match.png?downloads=true&downloadRank=true&stars=true)][4]
 
 ## Use in another module
 
 -   Example
-    1. [find](source/find.js)
-    2. [which](source/which.js)
+    1. [find](source/find.ts)
+    2. [which](source/which.ts)
 -   Document
     -   Online: [URL](https://tech-query.me/fs-match/) or `npm docs`
     -   Offline: `npm start`
@@ -52,3 +53,8 @@ app-find chrome firefox -c
 ## Typical case
 
 1.  [Puppeteer browser](https://easywebapp.github.io/puppeteer-browser)
+
+[1]: https://babeljs.io/docs/plugins/transform-async-generator-functions/
+[2]: https://david-dm.org/TechQuery/fs-match
+[3]: https://www.travis-ci.com/TechQuery/fs-match
+[4]: https://nodei.co/npm/fs-match/
