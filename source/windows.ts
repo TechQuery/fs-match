@@ -2,7 +2,7 @@ import { existsSync, readdirSync } from 'fs';
 
 const { env } = process;
 
-let disk;
+let disk: string[];
 /**
  * @return  Acessible disk partitions of current Windows
  */
@@ -20,7 +20,7 @@ export function getPartition(): string[] {
     );
 }
 
-let folder;
+let folder: string[];
 /**
  * @return  Acessible application folders of current Windows
  */

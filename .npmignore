@@ -2,4 +2,4 @@ docs/
 test/
 .editorconfig
 .eslintrc.json
-tsconfig.lint.json
+.travis.yml

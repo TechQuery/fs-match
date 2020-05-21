@@ -13,7 +13,7 @@ A NodeJS package for finding folders, files & apps by Regular expression based o
     1. [find](source/find.ts)
     2. [which](source/which.ts)
 -   Document
-    -   Online: [URL](https://tech-query.me/fs-match/) or `npm docs`
+    -   Online: [URL][5] or `npm docs`
     -   Offline: `npm start`
 
 ## Use in Command-line shell
@@ -52,9 +52,10 @@ app-find chrome firefox -c
 
 ## Typical case
 
-1.  [Puppeteer browser](https://easywebapp.github.io/puppeteer-browser)
+1.  [Puppeteer browser](https://web-cell.dev/puppeteer-browser/)
 
-[1]: https://babeljs.io/docs/plugins/transform-async-generator-functions/
+[1]: https://javascript.info/async-iterators-generators
 [2]: https://david-dm.org/TechQuery/fs-match
 [3]: https://www.travis-ci.com/TechQuery/fs-match
 [4]: https://nodei.co/npm/fs-match/
+[5]: https://tech-query.me/fs-match/

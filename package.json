@@ -1,6 +1,6 @@
 {
     "name": "fs-match",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "description": "A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9 & TypeScript",
     "keywords": [
         "search",
@@ -34,24 +34,24 @@
         "start": "typedoc  &&  open-cli docs/index.html"
     },
     "dependencies": {
-        "commander": "^5.0.0",
+        "commander-jsx": "^0.5.0",
         "fs-extra": "^9.0.0"
     },
     "devDependencies": {
-        "@types/fs-extra": "^8.1.0",
-        "@types/jest": "^25.2.1",
-        "@types/node": "^13.11.0",
-        "@typescript-eslint/eslint-plugin": "^2.27.0",
-        "@typescript-eslint/parser": "^2.27.0",
-        "eslint": "^6.8.0",
-        "husky": "^4.2.3",
-        "jest": "^25.2.7",
-        "lint-staged": "^10.1.2",
+        "@types/fs-extra": "^9.0.1",
+        "@types/jest": "^25.2.3",
+        "@types/node": "^14.0.4",
+        "@typescript-eslint/eslint-plugin": "^2.34.0",
+        "@typescript-eslint/parser": "^2.34.0",
+        "eslint": "^7.0.0",
+        "husky": "^4.2.5",
+        "jest": "^26.0.1",
+        "lint-staged": "^10.2.4",
         "open-cli": "^6.0.1",
-        "prettier": "^2.0.4",
-        "ts-jest": "^25.3.1",
-        "typedoc": "^0.17.4",
-        "typescript": "^3.8.3"
+        "prettier": "^2.0.5",
+        "ts-jest": "^26.0.0",
+        "typedoc": "^0.17.7",
+        "typescript": "^3.9.3"
     },
     "prettier": {
         "singleQuote": true,
@@ -63,7 +63,7 @@
         "*.{md,json,yml}": [
             "prettier --write"
         ],
-        "*.ts": [
+        "*.{ts,tsx}": [
             "prettier --write",
             "eslint --fix"
         ]

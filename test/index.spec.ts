@@ -12,7 +12,7 @@ const directory = [
         'docs/assets/images',
         'docs/assets/js'
     ],
-    NodeExe = `node${process.platform === 'win32' ? '.exe' : ''}`;
+    NodeExe = 'node' + (process.platform === 'win32' ? '.exe' : '');
 
 describe('Core methods', () => {
     /**
@@ -25,7 +25,7 @@ describe('Core methods', () => {
             if (statSync(name).isDirectory())
                 folder.push(name.replace(/\\/g, '/'));
 
-        expect(folder).toEqual(expect.arrayContaining(directory));
+        expect(folder).toEqual(directory);
     });
 
     describe('Iterator filter', () => {
@@ -41,7 +41,7 @@ describe('Core methods', () => {
             ))
                 folder.push(name.replace(/\\/g, '/'));
 
-            expect(folder).toEqual(expect.arrayContaining(directory));
+            expect(folder).toEqual(directory);
         });
 
         /**
@@ -53,9 +53,7 @@ describe('Core methods', () => {
             for await (const name of filter(traverse('./docs'), null, 2))
                 folder.push(name.replace(/\\/g, '/'));
 
-            expect(folder).toEqual(
-                expect.arrayContaining(directory.slice(0, 2))
-            );
+            expect(folder).toEqual(directory.slice(0, 2));
         });
 
         /**
@@ -71,9 +69,7 @@ describe('Core methods', () => {
             ))
                 folder.push(name.replace(/\\/g, '/'));
 
-            expect(folder).toEqual(
-                expect.arrayContaining(directory.slice(0, 3))
-            );
+            expect(folder).toEqual(directory.slice(0, 3));
         });
     });
 

@@ -34,7 +34,6 @@ export async function* traverse(path: string): AsyncGenerator<string> {
                 case 'UNKNOWN':
                     continue;
             }
-
             throw error;
         }
     }
@@ -115,6 +114,5 @@ export async function which(name: string): Promise<string> {
                 return file;
         }
     }
-
     return '';
 }
