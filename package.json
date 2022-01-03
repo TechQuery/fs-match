@@ -27,6 +27,7 @@
         "app-find": "dist/which.js"
     },
     "scripts": {
+        "prepare": "husky install",
         "lint": "lint-staged",
         "test": "tsc  &&  typedoc  &&  jest --no-cache",
         "build": "lint-staged  &&  rm -rf dist/  &&  npm test",
