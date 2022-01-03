@@ -28,10 +28,10 @@
     },
     "scripts": {
         "lint": "lint-staged",
-        "test": "tsc  &&  typedoc source/  &&  jest --no-cache",
+        "test": "tsc  &&  typedoc  &&  jest --no-cache",
         "build": "lint-staged  &&  rm -rf dist/  &&  npm test",
         "prepublishOnly": "npm run build",
-        "start": "typedoc source/  &&  open-cli docs/index.html"
+        "start": "typedoc  &&  open-cli docs/index.html"
     },
     "dependencies": {
         "commander-jsx": "^0.6.1",

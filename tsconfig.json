@@ -15,6 +15,7 @@
         "name": "FS Match",
         "excludeExternals": true,
         "excludePrivate": true,
+        "entryPoints": ["source/core.ts", "source/windows.ts"],
         "readme": "./ReadMe.md",
         "out": "docs/"
     }
