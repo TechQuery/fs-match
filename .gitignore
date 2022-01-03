@@ -61,3 +61,6 @@ typings/
 # Building
 dist/
 docs/
+
+# IDE
+.vscode/settings.json

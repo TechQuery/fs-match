@@ -30,7 +30,8 @@ async function match(
 }
 
 Command.execute(
-    <fs-match
+    <Command
+        name="fs-match"
         parameters="[name ...]"
         version="1.4.0"
         description="Search App paths with App Name"

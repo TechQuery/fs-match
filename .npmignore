@@ -2,4 +2,6 @@ docs/
 test/
 .editorconfig
 .eslintrc.json
-.travis.yml
+.github/
+.husky/
+.vscode/

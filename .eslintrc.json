@@ -1,21 +1,23 @@
 {
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module",
         "project": ["./tsconfig.json", "./test/tsconfig.json"]
     },
     "plugins": ["@typescript-eslint"],
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        "prettier"
     ],
     "rules": {
         "no-var": "warn",
         "no-ex-assign": "warn",
         "require-atomic-updates": "warn",
-        "@typescript-eslint/camelcase": "warn",
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/ban-ts-ignore": "warn"
+        "@typescript-eslint/explicit-function-return-type": "off"
     }
 }

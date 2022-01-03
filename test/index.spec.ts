@@ -126,7 +126,7 @@ describe('`which` command', () => {
         const log = execSync(`${command} -f test/example.ini`) + '';
 
         expect(log).toMatch(
-            /node=[\s\S]+?node[\s\S]+-+\nSearch: \d+(\.\d+)?ms/
+            /node=[\s\S]+?node[\s\S]+-+\nSearch: \d+(\.\d+)?m?s/
         );
 
         expect((readFileSync('test/example.ini') + '').trim()).toBe(
