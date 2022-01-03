@@ -6,12 +6,7 @@ import { execSync } from 'child_process';
 import { traverse, filter, which } from '../source/core';
 import { getPartition, getAppFolder } from '../source/windows';
 
-const directory = [
-        'docs/assets',
-        'docs/assets/css',
-        'docs/assets/images',
-        'docs/assets/js'
-    ],
+const paths = ['docs/.nojekyll', 'docs/assets', 'docs/modules'],
     NodeExe = 'node' + (process.platform === 'win32' ? '.exe' : '');
 
 describe('Core methods', () => {
@@ -25,7 +20,7 @@ describe('Core methods', () => {
             if (statSync(name).isDirectory())
                 folder.push(name.replace(/\\/g, '/'));
 
-        expect(folder).toEqual(directory);
+        expect(folder).toEqual(paths.slice(1));
     });
 
     describe('Iterator filter', () => {
@@ -41,7 +36,7 @@ describe('Core methods', () => {
             ))
                 folder.push(name.replace(/\\/g, '/'));
 
-            expect(folder).toEqual(directory);
+            expect(folder).toEqual(paths.slice(1));
         });
 
         /**
@@ -53,7 +48,7 @@ describe('Core methods', () => {
             for await (const name of filter(traverse('./docs'), null, 2))
                 folder.push(name.replace(/\\/g, '/'));
 
-            expect(folder).toEqual(directory.slice(0, 2));
+            expect(folder).toEqual(paths.slice(0, 2));
         });
 
         /**
@@ -69,7 +64,7 @@ describe('Core methods', () => {
             ))
                 folder.push(name.replace(/\\/g, '/'));
 
-            expect(folder).toEqual(directory.slice(0, 3));
+            expect(folder).toEqual(paths.slice(1));
         });
     });
 
