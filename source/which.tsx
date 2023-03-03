@@ -19,8 +19,8 @@ async function match(
 
         console.info((show_log || list[1] ? `${name}=` : '') + path);
 
-        if (iniFile) appendFileSync(iniFile, `${name}=${path}\n`);
-        else if (NPMConfig) execSync(`npm set ${name} ${JSON.stringify(path)}`);
+        if (iniFile || NPMConfig)
+            appendFileSync(iniFile || '.env', `${name}=${path}\n`);
     }
 
     if (!show_log) return;
@@ -43,7 +43,8 @@ Command.execute(
             },
             'NPM-config': {
                 shortcut: 'c',
-                description: 'Set result to local NPM configuration'
+                description:
+                    'Append result to ".env" file in working directory (since npm@9 & fs-match@1.7)'
             }
         }}
         executor={match}

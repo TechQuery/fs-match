@@ -3,15 +3,15 @@
 A NodeJS package for finding folders, files & apps by Regular expression based on [Asynchronous iteration of ES 9][1] & TypeScript.
 
 [![NPM Dependency](https://david-dm.org/TechQuery/fs-match.svg)][2]
-[![CI & CD](https://github.com/TechQuery/fs-match/workflows/CI%20&%20CD/badge.svg)][3]
+[![CI & CD](https://github.com/TechQuery/fs-match/actions/workflows/main.yml/badge.svg)][3]
 
 [![NPM](https://nodei.co/npm/fs-match.png?downloads=true&downloadRank=true&stars=true)][4]
 
 ## Use in another module
 
 -   Example
-    1. [find](source/find.ts)
-    2. [which](source/which.ts)
+    1. [find](source/find.tsx)
+    2. [which](source/which.tsx)
 -   Document
     -   Online: [URL][5] or `npm docs`
     -   Offline: `npm start`
@@ -41,11 +41,11 @@ fs-match root/path -r full\.name\.pattern -c 1
 
 app-find chrome firefox
 
-# Append to a file
+# Append result to an ini-like file
 
 app-find chrome firefox -f .npmrc
 
-# Set up NPM configuration
+# Append result to ".env" file in working directory (since npm@9 & fs-match@1.7)
 
 app-find chrome firefox -c
 ```
@@ -57,6 +57,6 @@ app-find chrome firefox -c
 
 [1]: https://javascript.info/async-iterators-generators
 [2]: https://david-dm.org/TechQuery/fs-match
-[3]: https://github.com/TechQuery/fs-match/actions
+[3]: https://github.com/TechQuery/fs-match/actions/workflows/main.yml
 [4]: https://nodei.co/npm/fs-match/
 [5]: https://tech-query.me/fs-match/

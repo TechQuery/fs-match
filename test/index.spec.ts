@@ -2,11 +2,17 @@ import { statSync, readFileSync, unlinkSync, existsSync } from 'fs';
 import { isAbsolute } from 'path';
 import { release } from 'os';
 import { execSync } from 'child_process';
+import { parse } from 'dotenv';
 
 import { traverse, filter, which } from '../source/core';
 import { getPartition, getAppFolder } from '../source/windows';
 
-const paths = ['docs/.nojekyll', 'docs/assets', 'docs/modules'],
+const paths = [
+        'docs/.nojekyll',
+        'docs/assets',
+        'docs/functions',
+        'docs/modules'
+    ],
     NodeExe = 'node' + (process.platform === 'win32' ? '.exe' : '');
 
 describe('Core methods', () => {
@@ -129,12 +135,11 @@ describe('`which` command', () => {
         );
     });
 
-    it('Write to NPM configuration', () => {
-        const log = execSync(`${command} -c`) + '';
+    it('Write to `.env` file', () => {
+        const log = execSync(`${command} -c`) + '',
+            { node } = parse(readFileSync('.env') + '');
 
-        expect((execSync('npm get node') + '').trim()).toBe(
-            log.split(/=|\n/)[1]
-        );
+        expect(node).toBe(log.split(/=|\n/)[1]);
     });
 
     if (process.platform !== 'win32')
@@ -143,7 +148,6 @@ describe('`which` command', () => {
 
     afterAll(() => {
         unlinkSync('test/example.ini');
-
-        execSync('npm config delete node');
+        unlinkSync('.env');
     });
 });

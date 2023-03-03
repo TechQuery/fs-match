@@ -1,6 +1,8 @@
 {
     "name": "fs-match",
-    "version": "1.6.0",
+    "version": "1.7.0",
+    "license": "LGPL-3.0",
+    "author": "shiy2008@gmail.com",
     "description": "A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9 & TypeScript",
     "keywords": [
         "search",
@@ -11,8 +13,6 @@
         "iterator",
         "typescript"
     ],
-    "author": "shiy2008@gmail.com",
-    "license": "LGPL-3.0",
     "homepage": "https://tech-query.me/fs-match/",
     "repository": {
         "type": "git",
@@ -26,34 +26,27 @@
         "fs-match": "dist/find.js",
         "app-find": "dist/which.js"
     },
-    "scripts": {
-        "prepare": "husky install",
-        "lint": "lint-staged",
-        "test": "tsc  &&  typedoc  &&  jest --no-cache",
-        "build": "lint-staged  &&  rm -rf dist/  &&  npm test",
-        "prepublishOnly": "npm run build",
-        "start": "typedoc  &&  open-cli docs/index.html"
-    },
     "dependencies": {
         "commander-jsx": "^0.6.1",
-        "fs-extra": "^10.0.0"
+        "fs-extra": "^11.1.0"
     },
     "devDependencies": {
-        "@types/fs-extra": "^9.0.13",
-        "@types/jest": "^27.4.0",
-        "@types/node": "^14.18.4",
-        "@typescript-eslint/eslint-plugin": "^5.8.1",
-        "@typescript-eslint/parser": "^5.8.1",
-        "eslint": "^8.6.0",
-        "eslint-config-prettier": "^8.3.0",
-        "husky": "^7.0.4",
-        "jest": "^27.4.5",
-        "lint-staged": "^12.1.5",
-        "open-cli": "^7.0.1",
-        "prettier": "^2.5.1",
-        "ts-jest": "^27.1.2",
-        "typedoc": "^0.22.10",
-        "typescript": "^4.5.4"
+        "@types/fs-extra": "^11.0.1",
+        "@types/jest": "^29.4.0",
+        "@types/node": "^16.18.14",
+        "@typescript-eslint/eslint-plugin": "^5.54.0",
+        "@typescript-eslint/parser": "^5.54.0",
+        "dotenv": "^16.0.3",
+        "eslint": "^8.35.0",
+        "eslint-config-prettier": "^8.6.0",
+        "husky": "^8.0.3",
+        "jest": "^29.4.3",
+        "lint-staged": "^13.1.2",
+        "open-cli": "^7.1.0",
+        "prettier": "^2.8.4",
+        "ts-jest": "^29.0.5",
+        "typedoc": "^0.23.26",
+        "typescript": "~4.9.5"
     },
     "prettier": {
         "singleQuote": true,
@@ -68,5 +61,13 @@
     "jest": {
         "preset": "ts-jest",
         "testTimeout": 60000
+    },
+    "scripts": {
+        "prepare": "husky install",
+        "lint": "lint-staged",
+        "test": "tsc  &&  typedoc  &&  jest --no-cache",
+        "build": "lint-staged  &&  rm -rf dist/  &&  npm test",
+        "prepublishOnly": "npm run build",
+        "start": "typedoc  &&  open-cli docs/index.html"
     }
 }
