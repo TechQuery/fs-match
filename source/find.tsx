@@ -13,7 +13,6 @@ Command.execute(
     <Command
         name="app-find"
         parameters="[dir]"
-        version="1.5.0"
         description="Search File paths with Regular Expression"
         options={{
             'reg-exp': {

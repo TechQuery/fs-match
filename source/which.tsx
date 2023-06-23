@@ -33,7 +33,6 @@ Command.execute(
     <Command
         name="fs-match"
         parameters="[name ...]"
-        version="1.4.0"
         description="Search App paths with App Name"
         options={{
             'ini-file': {
