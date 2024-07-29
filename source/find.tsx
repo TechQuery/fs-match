@@ -11,7 +11,6 @@ async function find({ 'reg-exp': regExp, count }, folder = process.cwd()) {
 
 Command.execute(
     <Command
-        name="app-find"
         parameters="[dir]"
         description="Search File paths with Regular Expression"
         options={{

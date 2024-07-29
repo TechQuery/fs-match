@@ -11,6 +11,7 @@ const paths = [
         'docs/.nojekyll',
         'docs/assets',
         'docs/functions',
+        'docs/media',
         'docs/modules'
     ],
     NodeExe = 'node' + (process.platform === 'win32' ? '.exe' : '');
@@ -70,7 +71,7 @@ describe('Core methods', () => {
             ))
                 folder.push(name.replace(/\\/g, '/'));
 
-            expect(folder).toEqual(paths.slice(1));
+            expect(folder).toEqual(paths.slice(1, 4));
         });
     });
 

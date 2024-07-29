@@ -29,6 +29,7 @@ export async function* traverse(path: string): AsyncGenerator<string> {
             switch (error.code) {
                 case 'ENOENT':
                 case 'EPERM':
+                case 'EACCES':
                 case 'EBUSY':
                 case 'ELOOP':
                 case 'UNKNOWN':

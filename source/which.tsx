@@ -2,7 +2,6 @@
 
 import { Command, createCommand } from 'commander-jsx';
 import { appendFileSync } from 'fs';
-import { execSync } from 'child_process';
 
 import { which } from './core';
 
@@ -31,7 +30,6 @@ async function match(
 
 Command.execute(
     <Command
-        name="fs-match"
         parameters="[name ...]"
         description="Search App paths with App Name"
         options={{
