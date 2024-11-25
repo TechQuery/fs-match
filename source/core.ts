@@ -1,8 +1,8 @@
-import { readdir, stat, existsSync } from 'fs-extra';
-import { join } from 'path';
 import { execSync } from 'child_process';
+import { existsSync, readdir, stat, statSync } from 'fs-extra';
+import { join } from 'path';
 
-import { getPartition, getAppFolder } from './windows';
+import { getAppFolder, getPartition } from './windows';
 
 const { platform, env } = process;
 
@@ -100,10 +100,9 @@ export async function which(name: string): Promise<string> {
             for (const root of MacAppPath)
                 for await (const file of filter(
                     traverse(root),
-                    `\\.app\\/Contents\\/MacOS\\/(\\w+\\W)?${name}$`,
-                    1
+                    `\\.app\\/Contents\\/MacOS\\/(\\w+\\W)?${name}$`
                 ))
-                    return file;
+                    if (statSync(file).isFile()) return file;
             break;
         }
         default: {
@@ -111,8 +110,8 @@ export async function which(name: string): Promise<string> {
 
             if (path) return path;
 
-            for await (const file of filter(traverse('/opt'), `${name}$`, 1))
-                return file;
+            for await (const file of filter(traverse('/opt'), `${name}$`))
+                if (statSync(file).isFile()) return file;
         }
     }
     return '';

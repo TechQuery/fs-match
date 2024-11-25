@@ -1,11 +1,11 @@
-import { statSync, readFileSync, unlinkSync, existsSync } from 'fs';
-import { isAbsolute } from 'path';
-import { release } from 'os';
 import { execSync } from 'child_process';
 import { parse } from 'dotenv';
+import { existsSync, readFileSync, statSync, unlinkSync } from 'fs';
+import { release } from 'os';
+import { isAbsolute } from 'path';
 
-import { traverse, filter, which } from '../source/core';
-import { getPartition, getAppFolder } from '../source/windows';
+import { filter, traverse, which } from '../source/core';
+import { getAppFolder, getPartition } from '../source/windows';
 
 const paths = [
         'docs/.nojekyll',
