@@ -1,6 +1,6 @@
 {
     "name": "fs-match",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9 & TypeScript",
