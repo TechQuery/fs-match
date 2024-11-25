@@ -2,7 +2,7 @@
 
 import { Command, createCommand } from 'commander-jsx';
 
-import { traverse, filter } from './core';
+import { filter, traverse } from './core';
 
 async function find({ 'reg-exp': regExp, count }, folder = process.cwd()) {
     for await (const file of filter(traverse(folder), regExp, count))

@@ -2,7 +2,7 @@
 
 A NodeJS package for finding folders, files & apps by Regular expression based on [Asynchronous iteration of ES 9][1] & TypeScript.
 
-[![NPM Dependency](https://david-dm.org/TechQuery/fs-match.svg)][2]
+[![NPM Dependency](https://img.shields.io/librariesio/github/idea2app/fs-match.svg)][2]
 [![CI & CD](https://github.com/TechQuery/fs-match/actions/workflows/main.yml/badge.svg)][3]
 
 [![NPM](https://nodei.co/npm/fs-match.png?downloads=true&downloadRank=true&stars=true)][4]
@@ -56,7 +56,7 @@ app-find chrome firefox -c
 2.  [Hexo migrator for Web](https://tech-query.me/hexo-migrator-web/)
 
 [1]: https://javascript.info/async-iterators-generators
-[2]: https://david-dm.org/TechQuery/fs-match
+[2]: https://libraries.io/npm/fs-match
 [3]: https://github.com/TechQuery/fs-match/actions/workflows/main.yml
 [4]: https://nodei.co/npm/fs-match/
 [5]: https://tech-query.me/fs-match/
