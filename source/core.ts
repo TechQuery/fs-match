@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { existsSync, readdir, stat, statSync } from 'fs-extra';
+import { existsSync, readdir, statSync } from 'fs-extra';
 import { join } from 'path';
 
 import { getAppFolder, getPartition } from './windows';
@@ -18,13 +18,12 @@ export async function* traverse(path: string): AsyncGenerator<string> {
         return;
     }
 
-    for (let name of await readdir(path)) {
-        name = join(path, name);
-
-        yield name;
+    for (const node of await readdir(path, { withFileTypes: true })) {
+        const fullPath = join(path, node.name);
+        yield fullPath;
 
         try {
-            if ((await stat(name)).isDirectory()) yield* traverse(name);
+            if (node.isDirectory()) yield* traverse(fullPath);
         } catch (error) {
             switch (error.code) {
                 case 'ENOENT':
@@ -64,7 +63,7 @@ export async function* filter(
             else break;
 }
 
-function Shell_which(name: string) {
+function $which(name: string) {
     try {
         return (execSync(`which ${name}`) + '').trim();
     } catch (error) {
@@ -77,42 +76,48 @@ const MacAppPath = ['/Applications', `${env.HOME}/Applications`].filter(
 );
 
 /**
- * @param name - Name (without extension name) of a executable file
- *
- * @return First matched path of a command
+ * @param names - Names (without extension name) of Executable files
  */
-export async function which(name: string): Promise<string> {
-    switch (platform) {
-        case 'win32':
-            for (const root of getAppFolder())
-                for await (const file of filter(
-                    traverse(root),
-                    `\\\\${name}\\.exe$`,
-                    1
-                ))
-                    return file;
-            break;
-        case 'darwin': {
-            const path = Shell_which(name);
+export async function* which(...names: string[]) {
+    const appRoots =
+            platform === 'win32'
+                ? getAppFolder()
+                : platform === 'darwin'
+                  ? MacAppPath
+                  : ['/opt'],
+        appPatterns =
+            platform === 'win32'
+                ? names.map(name => RegExp(String.raw`\\${name}\.exe$`, 'i'))
+                : platform === 'darwin'
+                  ? names.map(name =>
+                        RegExp(
+                            String.raw`\.app/Contents/MacOS/(\w+\W)?${name}$`,
+                            'i'
+                        )
+                    )
+                  : names.map(name => RegExp(`/${name}$`, 'i')),
+        noPathCommandPatterns: RegExp[] = [];
 
-            if (path) return path;
+    if (platform === 'win32') noPathCommandPatterns.push(...appPatterns);
+    else
+        for (const [index, name] of Object.entries(names)) {
+            const path = $which(name);
 
-            for (const root of MacAppPath)
-                for await (const file of filter(
-                    traverse(root),
-                    `\\.app\\/Contents\\/MacOS\\/(\\w+\\W)?${name}$`
-                ))
-                    if (statSync(file).isFile()) return file;
-            break;
+            if (path) yield path;
+            else noPathCommandPatterns.push(appPatterns[index]);
         }
-        default: {
-            const path = Shell_which(name);
 
-            if (path) return path;
+    for (const root of appRoots)
+        for await (const file of traverse(root)) {
+            if (!noPathCommandPatterns[0]) return;
 
-            for await (const file of filter(traverse('/opt'), `${name}$`))
-                if (statSync(file).isFile()) return file;
+            const index = noPathCommandPatterns.findIndex(pattern =>
+                pattern.test(file)
+            );
+            if (index < 0 || !statSync(file).isFile()) continue;
+
+            noPathCommandPatterns.splice(index, 1);
+
+            yield file;
         }
-    }
-    return '';
 }

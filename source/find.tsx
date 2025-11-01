@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { Command, createCommand } from 'commander-jsx';
+import { Command } from 'commander-jsx';
 
 import { filter, traverse } from './core';
 
