@@ -9,12 +9,12 @@ A NodeJS package for finding folders, files & apps by Regular expression based o
 
 ## Use in another module
 
--   Example
+- Example
     1. [find](source/find.tsx)
     2. [which](source/which.tsx)
--   Document
-    -   Online: [URL][5] or `npm docs`
-    -   Offline: `npm start`
+- Document
+    - Online: [URL][5] or `npm docs`
+    - Offline: `npm start`
 
 ## Use in Command-line shell
 
@@ -58,5 +58,5 @@ app-find chrome firefox -c
 [1]: https://javascript.info/async-iterators-generators
 [2]: https://libraries.io/npm/fs-match
 [3]: https://github.com/TechQuery/fs-match/actions/workflows/main.yml
-[4]: https://nodei.co/npm/fs-match/
+[4]: https://www.npmjs.com/package/fs-match
 [5]: https://tech-query.me/fs-match/

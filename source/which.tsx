@@ -1,31 +1,37 @@
 #! /usr/bin/env node
 
-import { Command, createCommand } from 'commander-jsx';
-import { appendFileSync } from 'fs';
+import { Command } from 'commander-jsx';
+import { appendFile } from 'fs/promises';
+import { parse } from 'path';
 
 import { which } from './core';
 
 async function match(
-    { 'ini-file': iniFile, 'NPM-config': NPMConfig },
+    { 'max-count': maxCount, 'ini-file': iniFile, 'NPM-config': NPMConfig },
     ...list: string[]
 ) {
     const show_log = iniFile || NPMConfig;
+    let count = 0;
 
     if (show_log) console.time('Search');
 
-    for (const name of list) {
-        const path = await which(name);
+    for await (const path of which(...list)) {
+        const name = list.find(name => parse(path).base.startsWith(name)) || '';
 
         console.info((show_log || list[1] ? `${name}=` : '') + path);
 
         if (iniFile || NPMConfig)
-            appendFileSync(iniFile || '.env', `${name}=${path}\n`);
+            await appendFile(iniFile || '.env', `${name}=${path}\n`);
+
+        if (++count >= +maxCount) break;
     }
 
     if (!show_log) return;
 
     console.info('--------------------');
     console.timeEnd('Search');
+
+    process.exit();
 }
 
 Command.execute(
@@ -33,6 +39,11 @@ Command.execute(
         parameters="[name ...]"
         description="Search App paths with App Name"
         options={{
+            'max-count': {
+                shortcut: 'm',
+                parameters: '<number>',
+                description: 'Limit the number of results'
+            },
             'ini-file': {
                 shortcut: 'f',
                 parameters: '<path>',

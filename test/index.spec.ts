@@ -1,6 +1,7 @@
 import { execSync } from 'child_process';
 import { parse } from 'dotenv';
-import { existsSync, readFileSync, statSync, unlinkSync } from 'fs';
+import { existsSync, readFileSync, statSync } from 'fs';
+import { rm } from 'fs/promises';
 import { release } from 'os';
 import { isAbsolute } from 'path';
 
@@ -79,8 +80,12 @@ describe('Core methods', () => {
      * @test {which}
      */
     it('Search application executable', async () => {
-        const path = await which('node');
+        let path = '';
 
+        for await (const file of which('node')) {
+            path = file;
+            break;
+        }
         expect(isAbsolute(path)).toBe(true);
 
         expect(path.endsWith(NodeExe)).toBe(true);
@@ -147,8 +152,8 @@ describe('`which` command', () => {
         it('Find nothing with only empty output', () =>
             expect((execSync(`${command}_unknown`) + '').trim()).toBe(''));
 
-    afterAll(() => {
-        unlinkSync('test/example.ini');
-        unlinkSync('.env');
+    afterAll(async () => {
+        await rm('test/example.ini');
+        await rm('.env');
     });
 });
