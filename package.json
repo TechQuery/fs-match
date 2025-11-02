@@ -1,6 +1,6 @@
 {
     "name": "fs-match",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "A NodeJS package for finding folders, files & apps by Regular expression based on Asynchronous iteration of ES 9 & TypeScript",
@@ -27,21 +27,20 @@
         "app-find": "dist/which.js"
     },
     "dependencies": {
-        "commander-jsx": "^0.7.1",
+        "@tech_query/node-toolkit": "^2.0.0-beta.3",
+        "commander-jsx": "^0.7.2",
         "fs-extra": "^11.3.2",
         "tslib": "^2.8.1"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.0",
-        "@tech_query/node-toolkit": "2.0.0-beta.0",
         "@types/fs-extra": "^11.0.4",
         "@types/jest": "^29.5.14",
         "@types/node": "^22.18.13",
-        "dotenv": "^17.2.3",
         "eslint": "^9.39.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-simple-import-sort": "^12.1.1",
-        "globals": "^16.4.0",
+        "globals": "^16.5.0",
         "husky": "^9.1.7",
         "jest": "^29.7.0",
         "jiti": "^2.6.1",

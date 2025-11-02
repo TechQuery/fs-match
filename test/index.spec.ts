@@ -1,5 +1,4 @@
 import { execSync } from 'child_process';
-import { parse } from 'dotenv';
 import { existsSync, readFileSync, statSync } from 'fs';
 import { rm } from 'fs/promises';
 import { release } from 'os';
@@ -135,17 +134,19 @@ describe('`which` command', () => {
         expect(log).toMatch(
             /node=[\s\S]+?node[\s\S]+-+\nSearch: \d+(\.\d+)?m?s/
         );
+        const file = (readFileSync('test/example.ini') + '').trim();
 
-        expect((readFileSync('test/example.ini') + '').trim()).toBe(
-            log.split('\n')[0]
-        );
+        expect(log).toMatch(file);
     });
 
     it('Write to `.env` file', () => {
-        const log = execSync(`${command} -c`) + '',
-            { node } = parse(readFileSync('.env') + '');
+        const log = execSync(`${command} -c`) + '';
 
-        expect(node).toBe(log.split(/=|\n/)[1]);
+        expect(log).toMatch(/node=[\s\S]+?node[\s\S]+/);
+
+        const file = (readFileSync('.env') + '').trim();
+
+        expect(log).toMatch(file);
     });
 
     if (process.platform !== 'win32')

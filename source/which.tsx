@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
+import { saveEnv } from '@tech_query/node-toolkit';
 import { Command } from 'commander-jsx';
-import { appendFile } from 'fs/promises';
 import { parse } from 'path';
 
 import { which } from './core';
@@ -18,19 +18,19 @@ async function match(
     for await (const path of which(...list)) {
         const name = list.find(name => parse(path).base.startsWith(name)) || '';
 
-        console.info((show_log || list[1] ? `${name}=` : '') + path);
-
+        console.info(
+            show_log || list[1] ? `${name}=${JSON.stringify(path)}` : path
+        );
         if (iniFile || NPMConfig)
-            await appendFile(iniFile || '.env', `${name}=${path}\n`);
+            await saveEnv({ [name]: path }, iniFile || '.env');
 
         if (++count >= +maxCount) break;
     }
 
-    if (!show_log) return;
-
-    console.info('--------------------');
-    console.timeEnd('Search');
-
+    if (show_log) {
+        console.info('--------------------');
+        console.timeEnd('Search');
+    }
     process.exit();
 }
 
